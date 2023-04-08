@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'wordgen.dart';
 import 'physics.dart';
+import 'lever1.dart';
+import 'lever2.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -42,6 +44,12 @@ class _MyHomePageState extends State<MyHomePage> {
       case 2:
         page = PhyPage();
         break;
+      case 3:
+        page = Lever1();
+        break;
+      case 4:
+        page = Lever2();
+        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -65,6 +73,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   NavigationRailDestination(
                     icon: Icon(Icons.gamepad),
                     label: Text('physics'),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.gamepad),
+                    label: Text('Lever1'),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.gamepad),
+                    label: Text('Lever2'),
                   ),
                 ],
                 selectedIndex: selectedIndex,
