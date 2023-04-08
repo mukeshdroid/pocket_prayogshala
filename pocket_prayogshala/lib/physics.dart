@@ -1,9 +1,14 @@
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:provider/provider.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+
+class PhyPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GameWidget(game: SpaceShooterGame());
+  }
+}
 
 class SpaceShooterGame extends FlameGame with PanDetector {
   late Player player;

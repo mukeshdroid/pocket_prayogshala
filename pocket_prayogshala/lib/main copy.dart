@@ -5,6 +5,8 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'ui.dart';
+import 'wordgen.dart';
 import 'physics.dart';
 
 void main() {
@@ -116,66 +118,89 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class GeneratorPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var pair = appState.current;
-
-    return Scaffold(
-      body: Center(
-        child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Flexible(flex: 3, child: BigCard(pair: pair)),
-              const Spacer(flex: 1),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  FavButton(appState: appState),
-                  NextButton(appState: appState),
-                ],
-              )
-            ]),
-      ),
-    );
-  }
-}
-
-class FavPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-
-    if (appState.favorites.isEmpty) {
-      return Center(
-        child: Text('No favorites yet.'),
-      );
-    }
-
-    return ListView(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Text('You have '
-              '${appState.favorites.length} favorites:'),
-        ),
-        for (var pair in appState.favorites)
-          ListTile(
-            leading: Icon(Icons.favorite),
-            title: Text(pair.asLowerCase),
-          ),
-      ],
-    );
-  }
-}
-
 class PhyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GameWidget(game: SpaceShooterGame());
+  }
+}
+
+class SpaceShooterGame extends FlameGame with PanDetector {
+  late Player player;
+  SpriteComponent boy = SpriteComponent();
+  SpriteComponent girl = SpriteComponent();
+  SpriteComponent backgroundImage = SpriteComponent();
+
+  final double characterSize = 180;
+
+  @override
+  Future<void> onLoad() async {
+    final screenWidth = size[0];
+    final screenHeight = size[1];
+
+    print(screenWidth);
+    print(screenHeight);
+
+    await super.onLoad();
+    print('the game has loaded');
+
+    backgroundImage
+      ..sprite = await loadSprite('bg.jpg')
+      ..size = size;
+
+    add(backgroundImage);
+
+    player = Player()
+      ..position = size / 2
+      ..width = 50
+      ..height = 100
+      ..anchor = Anchor.center;
+
+    add(player);
+
+    boy
+      ..anchor = Anchor.center
+      ..sprite = await loadSprite('boy.png')
+      ..size = Vector2(characterSize, characterSize)
+      ..y = screenHeight - 100
+      ..x = characterSize;
+
+    add(boy);
+
+    girl
+      ..anchor = Anchor.center
+      ..sprite = await loadSprite('girl.png')
+      ..size = Vector2(characterSize, characterSize)
+      ..y = screenHeight - 100
+      ..x = screenWidth - characterSize;
+
+    add(girl);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    if (girl.y > size[1] / 2) {
+      girl.y -= 30 * dt;
+    }
+  }
+
+  @override
+  void onPanUpdate(DragUpdateInfo info) {
+    player.move(info.delta.game);
+  }
+}
+
+class Player extends PositionComponent {
+  static final _paint = Paint()..color = Colors.white;
+
+  @override
+  void render(Canvas canvas) {
+    canvas.drawRect(size.toRect(), _paint);
+  }
+
+  void move(Vector2 delta) {
+    position.add(delta);
   }
 }
 
