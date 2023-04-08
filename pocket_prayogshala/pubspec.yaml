@@ -30,3 +30,5 @@ flutter:
     - assets/images/girl.png
     - assets/images/bg.jpg
 
+demo_module:
+  path: ../demo_module
