@@ -31,5 +31,3 @@ flutter:
     - assets/images/bg.jpg
     - assets/images/
 
-demo_module:
-  path: ../demo_module
