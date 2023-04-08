@@ -2,6 +2,8 @@ import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'dart:math';
+import 'package:flame/experimental.dart';
 
 class Lever2 extends StatelessWidget {
   @override
@@ -10,18 +12,48 @@ class Lever2 extends StatelessWidget {
   }
 }
 
-class Lever2Game extends FlameGame with PanDetector {
-  late Player player;
-  SpriteComponent boy = SpriteComponent();
-  SpriteComponent girl = SpriteComponent();
-  SpriteComponent backgroundImage = SpriteComponent();
+class MyDragSpriteComponent extends SpriteComponent with DragCallbacks {
+  MyDragSpriteComponent({super.size});
 
-  final double characterSize = 180;
+  final _paint = Paint();
+  bool _isDragged = false;
+
+  @override
+  void onDragStart(DragStartEvent event) => _isDragged = true;
+
+  @override
+  void onDragUpdate(DragUpdateEvent event) => position += event.delta;
+
+  @override
+  void onDragEnd(DragEndEvent event) => _isDragged = false;
+
+  // @override
+  // void render(Canvas canvas) {
+  //   _paint.color = _isDragged ? Colors.red : Colors.white;
+  //   canvas.drawRect(size.toRect(), _paint);
+  // }
+}
+
+class Lever2Game extends FlameGame with HasDraggableComponents {
+  late Player player;
+  SpriteComponent uparm = SpriteComponent();
+  SpriteComponent downarm = SpriteComponent();
+  SpriteComponent backgroundImage = SpriteComponent();
+  MyDragSpriteComponent supari1 = MyDragSpriteComponent();
+  MyDragSpriteComponent supari2 = MyDragSpriteComponent();
+  MyDragSpriteComponent supari3 = MyDragSpriteComponent();
 
   @override
   Future<void> onLoad() async {
     final screenWidth = size[0];
     final screenHeight = size[1];
+
+    const double leverWidth = 25;
+    final double leverLength = screenWidth * 0.5;
+
+    final supari1size = 0.1 * screenHeight;
+    final supari2size = 0.15 * screenHeight;
+    final supari3size = 0.2 * screenHeight;
 
     await super.onLoad();
 
@@ -35,36 +67,67 @@ class Lever2Game extends FlameGame with PanDetector {
       ..position = size / 2
       ..width = 50
       ..height = 100
-      ..anchor = Anchor.center;
+      ..anchor = Anchor.centerLeft;
 
-    add(player);
+    // add(player);
 
-    boy
+    uparm
+      ..anchor = Anchor.centerLeft
+      ..sprite = await loadSprite('arm.png')
+      ..size = Vector2(leverLength, leverWidth)
+      ..y = screenHeight - 150
+      ..x = 0.05 * screenWidth
+      ..angle = -1.047;
+
+    add(uparm);
+
+    downarm
+      ..anchor = Anchor.centerLeft
+      ..sprite = await loadSprite('arm.png')
+      ..size = Vector2(leverLength, leverWidth)
+      ..y = screenHeight - 150
+      ..x = 0.05 * screenWidth;
+
+    add(downarm);
+
+    supari1
       ..anchor = Anchor.center
-      ..sprite = await loadSprite('boy.png')
-      ..size = Vector2(characterSize, characterSize)
-      ..y = screenHeight - 100
-      ..x = characterSize;
+      ..sprite = await loadSprite('supari.png')
+      ..size = Vector2(supari1size, supari1size)
+      ..y = screenHeight - 150
+      ..x = screenWidth - 400;
 
-    add(boy);
+    add(supari1);
 
-    girl
+    supari2
       ..anchor = Anchor.center
-      ..sprite = await loadSprite('girl.png')
-      ..size = Vector2(characterSize, characterSize)
-      ..y = screenHeight - 100
-      ..x = screenWidth - characterSize;
+      ..sprite = await loadSprite('supari.png')
+      ..size = Vector2(supari2size, supari2size)
+      ..y = screenHeight - 150
+      ..x = screenWidth - 300;
 
-    add(girl);
+    add(supari2);
+
+    supari3
+      ..anchor = Anchor.center
+      ..sprite = await loadSprite('supari.png')
+      ..size = Vector2(supari3size, supari3size)
+      ..y = screenHeight - 150
+      ..x = screenWidth - 150;
+
+    add(supari3);
   }
 
-  @override
-  void update(double dt) {
-    super.update(dt);
-    if (girl.y > size[1] / 2) {
-      girl.y -= 30 * dt;
-    }
-  }
+  // @override
+  // void update(double dt) {
+  //   super.update(dt);
+  //   if (uparm.angle < 0) {
+  //     uparm.angle += dt;
+  //   }
+  //   if (uparm.angle > 0) {
+  //     uparm.angle = -1.047;
+  //   }
+  // }
 
   @override
   void onPanUpdate(DragUpdateInfo info) {
