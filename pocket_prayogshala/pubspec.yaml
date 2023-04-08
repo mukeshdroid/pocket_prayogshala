@@ -29,6 +29,7 @@ flutter:
     - assets/images/boy.png
     - assets/images/girl.png
     - assets/images/bg.jpg
+    - assets/images/
 
 demo_module:
   path: ../demo_module
