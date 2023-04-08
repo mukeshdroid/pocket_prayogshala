@@ -28,4 +28,6 @@ flutter:
   assets: 
     - assets/images/boy.png
     - assets/images/girl.png
+    - assets/images/bg.jpg
     - assets/images/
+
