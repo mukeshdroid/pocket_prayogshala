@@ -16,14 +16,14 @@ class Lever1 extends StatelessWidget {
 }
 
 class Lever1Game extends FlameGame with HasDraggableComponents {
-  late Player player;
-  SpriteComponent boy = SpriteComponent();
-  SpriteComponent girl = SpriteComponent();
+  // late Player player;
   SpriteComponent backgroundImage = SpriteComponent();
   SpriteComponent plankRod = SpriteComponent();
-  double plr_angle = 0;
-
+  SpriteComponent fulcrum = SpriteComponent();
+  List<MyDragSpriteComponent> weights = [];
+  List<MyDragSpriteComponent> humans = [];
   final double characterSize = 180;
+  List<int> takenPosition = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1];
 
   @override
   Future<void> onLoad() async {
@@ -44,281 +44,118 @@ class Lever1Game extends FlameGame with HasDraggableComponents {
       ..size = Vector2(550, 200)
       ..y = screenHeight / 2
       ..x = screenWidth / 2;
-
     add(plankRod);
 
-    player = Player()
-      ..position = size / 2
-      ..width = 50
-      ..height = 100
-      ..anchor = Anchor.center;
-
-    add(player);
-
-    boy
+    fulcrum
       ..anchor = Anchor.center
-      ..sprite = await loadSprite('boy.png')
-      ..size = Vector2(characterSize, characterSize)
-      ..y = screenHeight - 100
-      ..x = characterSize;
+      ..sprite = await loadSprite('triangle.png')
+      ..size = Vector2(30, 30)
+      ..y = screenHeight / 2 + 20
+      ..x = screenWidth / 2;
+    add(fulcrum);
 
-    add(boy);
+    for (int i = 1; i <= 5; i++) {
+      MyDragSpriteComponent weight = MyDragSpriteComponent()
+        ..anchor = Anchor.center
+        ..sprite = await loadSprite('weight.png')
+        ..size = Vector2(30, 30)
+        ..y = screenHeight - 50
+        ..x = screenWidth - 50 - (40) * i
+        ..initialPosition =
+            Vector2(screenWidth - 50 - (40) * i, screenHeight - 50)
+        ..human = false;
 
-    girl
-      ..anchor = Anchor.center
-      ..sprite = await loadSprite('girl.png')
-      ..size = Vector2(characterSize, characterSize)
-      ..y = screenHeight - 100
-      ..x = screenWidth - characterSize;
-
-    add(girl);
-
-    addAll([
-      DragTarget(),
-      Star(
-        n: 5,
-        radius1: 40,
-        radius2: 20,
-        sharpness: 0.2,
-        color: const Color(0xffbae5ad),
-        position: Vector2(70, 70),
-      ),
-      Star(
-        n: 3,
-        radius1: 50,
-        radius2: 40,
-        sharpness: 0.3,
-        color: const Color(0xff6ecbe5),
-        position: Vector2(70, 160),
-      ),
-      Star(
-        n: 12,
-        radius1: 10,
-        radius2: 75,
-        sharpness: 1.3,
-        color: const Color(0xfff6df6a),
-        position: Vector2(70, 270),
-      ),
-      Star(
-        n: 10,
-        radius1: 20,
-        radius2: 17,
-        sharpness: 0.85,
-        color: const Color(0xfff82a4b),
-        position: Vector2(110, 110),
-      ),
-    ]);
+      weights.add(weight);
+      add(weight);
+    }
+    for (int i = 1; i <= 5; i++) {
+      MyDragSpriteComponent human = MyDragSpriteComponent()
+        ..anchor = Anchor.center
+        ..sprite = await loadSprite('boy.png')
+        ..size = Vector2(50, 50)
+        ..y = screenHeight - 50
+        ..x = 50.0 + 40 * i
+        ..initialPosition = Vector2(50.0 + 40 * i, screenHeight - 50)
+        ..human = true;
+      humans.add(human);
+      add(human);
+    }
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    if (girl.y > size[1] / 2) {
-      girl.y -= 30 * dt;
-    }
-  }
-
-  @override
-  void onPanUpdate(DragUpdateInfo info) {
-    // print(info.eventPosition.game);
-    // print(player.absolutePosition);
-    // plr_angle += info.delta.game;
-    // print(info.delta.game.x);
-    // if ((plankRod.angle <= pi / 6) && (plankRod.angle >= -pi / 6)) {
-    //   plankRod.angle += info.delta.game.x * 0.03;
-    // } else {
-    //   if (plankRod.angle < 0) {
-    //     plankRod.angle = -pi / 6;
-    //   } else {
-    //     plankRod.angle = pi / 6;
-    //   }
-    // }
-
-    // print(plankRod.angle);
-    // player.move(info.delta.game);
   }
 }
 
-class Player extends PositionComponent {
-  static final _paint = Paint()..color = Colors.white;
+class MyDragSpriteComponent extends SpriteComponent
+    with DragCallbacks, HasGameRef<Lever1Game> {
+  MyDragSpriteComponent({super.size});
 
-  @override
-  void render(Canvas canvas) {
-    canvas.drawRect(size.toRect(), _paint);
-  }
+  List<Vector2> snappablePositions = [
+    Vector2(250, 310),
+    Vector2(300, 310),
+    Vector2(350, 310),
+    Vector2(400, 310),
+    Vector2(450, 310),
+    Vector2(550, 310),
+    Vector2(600, 310),
+    Vector2(650, 310),
+    Vector2(700, 310),
+    Vector2(750, 310)
+  ];
 
-  void move(Vector2 delta) {
-    position.add(delta);
-  }
-}
+  double snapDistance = 50;
+  int onBalancePos = 0;
+  bool onWeight = false;
 
-/// This component is the pink-ish rectangle in the center of the game window.
-/// It uses the [DragCallbacks] mixin in order to inform the game that it wants
-/// to receive drag events.
-class DragTarget extends PositionComponent with DragCallbacks {
-  DragTarget() : super(anchor: Anchor.center);
-
-  // final _rectPaint = Paint()..color = const Color(0x88AC54BF);
-
-  // / We will store all current circles into this map, keyed by the `pointerId`
-  // / of the event that created the circle.
-  // final Map<int, Trail> _trails = {};
-
-  @override
-  void onGameResize(Vector2 canvasSize) {
-    super.onGameResize(canvasSize);
-    size = canvasSize - Vector2(100, 75);
-    if (size.x < 100 || size.y < 100) {
-      size = canvasSize * 0.9;
-    }
-    position = canvasSize / 2;
-  }
-}
-
-class Trail extends Component {
-  Trail(Vector2 origin)
-      : _paths = [Path()..moveTo(origin.x, origin.y)],
-        _opacities = [1],
-        _lastPoint = origin.clone(),
-        _color =
-            HSLColor.fromAHSL(1, random.nextDouble() * 360, 1, 0.8).toColor();
-
-  final List<Path> _paths;
-  final List<double> _opacities;
-  Color _color;
-  late final _linePaint = Paint()..style = PaintingStyle.stroke;
-  late final _circlePaint = Paint()..color = _color;
-  bool _released = false;
-  double _timer = 0;
-  final _vanishInterval = 0.03;
-  final Vector2 _lastPoint;
-
-  static final random = Random();
-  static const lineWidth = 10.0;
-
-  @override
-  void render(Canvas canvas) {
-    assert(_paths.length == _opacities.length);
-    for (var i = 0; i < _paths.length; i++) {
-      final path = _paths[i];
-      final opacity = _opacities[i];
-      if (opacity > 0) {
-        _linePaint.color = _color.withOpacity(opacity);
-        _linePaint.strokeWidth = lineWidth * opacity;
-        canvas.drawPath(path, _linePaint);
-      }
-    }
-    canvas.drawCircle(
-      _lastPoint.toOffset(),
-      (lineWidth - 2) * _opacities.last + 2,
-      _circlePaint,
-    );
-  }
-
-  @override
-  void update(double dt) {
-    assert(_paths.length == _opacities.length);
-    _timer += dt;
-    while (_timer > _vanishInterval) {
-      _timer -= _vanishInterval;
-      for (var i = 0; i < _paths.length; i++) {
-        _opacities[i] -= 0.01;
-        if (_opacities[i] <= 0) {
-          _paths[i].reset();
-        }
-      }
-      if (!_released) {
-        _paths.add(Path()..moveTo(_lastPoint.x, _lastPoint.y));
-        _opacities.add(1);
-      }
-    }
-    if (_opacities.last < 0) {
-      removeFromParent();
-    }
-  }
-
-  void addPoint(Vector2 point) {
-    if (!point.x.isNaN) {
-      for (final path in _paths) {
-        path.lineTo(point.x, point.y);
-      }
-      _lastPoint.setFrom(point);
-    }
-  }
-
-  void end() => _released = true;
-
-  void cancel() {
-    _released = true;
-    _color = const Color(0xFFFFFFFF);
-  }
-}
-
-class Star extends PositionComponent with DragCallbacks {
-  Star({
-    required int n,
-    required double radius1,
-    required double radius2,
-    required double sharpness,
-    required this.color,
-    super.position,
-  }) {
-    _path = Path()..moveTo(radius1, 0);
-    for (var i = 0; i < n; i++) {
-      final p1 = Vector2(radius2, 0)..rotate(tau / n * (i + sharpness));
-      final p2 = Vector2(radius2, 0)..rotate(tau / n * (i + 1 - sharpness));
-      final p3 = Vector2(radius1, 0)..rotate(tau / n * (i + 1));
-      _path.cubicTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
-    }
-    _path.close();
-  }
-
-  final Color color;
-  final Paint _paint = Paint();
-  final Paint _borderPaint = Paint()
-    ..color = const Color(0xFFffffff)
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 3;
-  final _shadowPaint = Paint()
-    ..color = const Color(0xFF000000)
-    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4.0);
-  late final Path _path;
+  // final _paint = Paint();
   bool _isDragged = false;
-
-  @override
-  bool containsLocalPoint(Vector2 point) {
-    return _path.contains(point.toOffset());
-  }
-
-  @override
-  void render(Canvas canvas) {
-    if (_isDragged) {
-      _paint.color = color.withOpacity(0.5);
-      canvas.drawPath(_path, _paint);
-      canvas.drawPath(_path, _borderPaint);
-    } else {
-      _paint.color = color.withOpacity(1);
-      canvas.drawPath(_path, _shadowPaint);
-      canvas.drawPath(_path, _paint);
-    }
-  }
+  bool human = false;
+  late Vector2 initialPosition;
+  Vector2 temp_Position = Vector2(0, 0);
 
   @override
   void onDragStart(DragStartEvent event) {
     _isDragged = true;
-    priority = 10;
-  }
-
-  @override
-  void onDragEnd(DragEndEvent event) {
-    _isDragged = false;
-    priority = 0;
+    temp_Position = Vector2.copy(position);
   }
 
   @override
   void onDragUpdate(DragUpdateEvent event) {
     position += event.delta;
   }
-}
 
-const tau = 2 * pi;
+  @override
+  void onDragEnd(DragEndEvent event) {
+    _isDragged = false;
+    snap();
+  }
+
+  void snap() {
+    double minDistance = double.infinity;
+    Vector2 snapPosition = Vector2.zero();
+    List<double> distance = [];
+    for (final positions in snappablePositions) {
+      distance.add(positions.distanceTo(position));
+    }
+    minDistance = distance.fold(
+        distance.first, (prev, current) => prev < current ? prev : current);
+    int minIndex = distance.indexOf(minDistance);
+    snapPosition =
+        Vector2(snappablePositions[minIndex].x, snappablePositions[minIndex].y);
+    if (!human) {
+      snapPosition.y += 10;
+    }
+    print(gameRef.takenPosition);
+    if (minDistance <= snapDistance &&
+        (((gameRef.takenPosition[minIndex] == 0) && human) ||
+            ((gameRef.takenPosition[minIndex] == 1) && !human))) {
+      position.setFrom(snapPosition);
+      gameRef.takenPosition[minIndex] = human ? 1 : 2;
+    } else {
+      position.setFrom(initialPosition);
+      if (onWeight == true) gameRef.takenPosition[minIndex] = human ? 0 : 1;
+    }
+  }
+}
