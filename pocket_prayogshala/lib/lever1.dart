@@ -15,7 +15,7 @@ class Lever1 extends StatelessWidget {
   }
 }
 
-class Lever1Game extends FlameGame with HasDraggableComponents {
+class Lever1Game extends FlameGame with DragCallbacks {
   // late Player player;
   SpriteComponent backgroundImage = SpriteComponent();
   SpriteComponent plankRod = SpriteComponent();
@@ -23,7 +23,11 @@ class Lever1Game extends FlameGame with HasDraggableComponents {
   List<MyDragSpriteComponent> weights = [];
   List<MyDragSpriteComponent> humans = [];
   List<int> takenPosition = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1];
-  int tilt = 0;
+  // this is initialized when the student asks presses the execute button
+  // initialized as 1 for testing ( plank rod starts rotating clockwise)
+  int tilt = 1;
+  // by how much should the lever be tilted
+  double maxTiltAngle = pi / 10;
   static late double fulcrumPoint;
 
   @override
@@ -86,17 +90,40 @@ class Lever1Game extends FlameGame with HasDraggableComponents {
     }
   }
 
-  @override
-  Future<void> onMount() async {
-    // await super.onMount();
-    // if attached==true
-  }
+  // @override
+  // Future<void> onMount() async {
+  //   // await super.onMount();
+  //   // if attached==true
+  // }
 
   @override
   void update(double dt) {
     super.update(dt);
+    if (plankRod.angle <= -maxTiltAngle && tilt == -1) {
+      tilt = 1;
+    } else if (plankRod.angle >= maxTiltAngle && tilt == 1) {
+      tilt = -1;
+    }
+    if (tilt == 1) {
+      plankRod.angle += .5 * dt;
+    } else {
+      plankRod.angle -= .5 * dt;
+    }
 
-    plankRod.angle += .5 * dt;
+    weights.forEach((element) {
+      if (element.onWeight == true && element._isDragged == false) {
+        element.angle = plankRod.angle;
+        element.x = plankRod.x - element.distFromFulcrum * cos(element.angle);
+        element.y = plankRod.y - element.distFromFulcrum * sin(element.angle);
+      }
+    });
+    humans.forEach((element) {
+      if (element.onWeight == true && element._isDragged == false) {
+        element.angle = plankRod.angle;
+        element.x = plankRod.x - element.distFromFulcrum * cos(element.angle);
+        element.y = plankRod.y - element.distFromFulcrum * sin(element.angle);
+      }
+    });
   }
 }
 
@@ -118,9 +145,12 @@ class MyDragSpriteComponent extends SpriteComponent
   ];
 
   static double snapDistance = 50;
-  int onBalancePos = 0;
+  // index of where the position of the object is
+  // 1000 implies does not exist on balance
+  int onBalancePos = 1000;
   bool onWeight = false;
-
+  // this is temporary
+  int distFromFulcrum = 250;
   // final _paint = Paint();
   bool _isDragged = false;
   bool human = false;
@@ -161,16 +191,24 @@ class MyDragSpriteComponent extends SpriteComponent
     if (!human) {
       snapPosition.y += 10;
     }
-    // print(gameRef.takenPosition);
     if (minDistance <= snapDistance &&
         (((gameRef.takenPosition[minIndex] == 0) && human) ||
             ((gameRef.takenPosition[minIndex] == 1) && !human))) {
       position.setFrom(snapPosition);
-      // gameRef.fulcrum.add(MyDragSpriteComponent());
+      onBalancePos = minIndex;
       gameRef.takenPosition[minIndex] = human ? 1 : 2;
+      distFromFulcrum = 500 - position.x.toInt();
+      onWeight = true;
     } else {
-      position.setFrom(initialPosition);
-      if (onWeight == true) gameRef.takenPosition[minIndex] = human ? 0 : 1;
+      objectUnsnap(minIndex);
     }
+  }
+
+  void objectUnsnap(int minIndex) {
+    position.setFrom(initialPosition);
+    angle = 0;
+    onBalancePos = 1000;
+    onWeight = false;
+    if (onWeight == true) gameRef.takenPosition[minIndex] = human ? 0 : 1;
   }
 }
