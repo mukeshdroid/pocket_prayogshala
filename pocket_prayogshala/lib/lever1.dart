@@ -28,6 +28,7 @@ class Lever1Game extends FlameGame with DragCallbacks {
   int tilt = 1;
   // by how much should the lever be tilted
   double maxTiltAngle = pi / 10;
+  double minSnappingAngle = 0.01;
   static late double fulcrumPoint;
 
   @override
@@ -99,16 +100,30 @@ class Lever1Game extends FlameGame with DragCallbacks {
   @override
   void update(double dt) {
     super.update(dt);
-    if (plankRod.angle <= -maxTiltAngle && tilt == -1) {
+    if (plankRod.angle >= -maxTiltAngle && plankRod.angle <= 0.0 && tilt == 0) {
+      if (plankRod.angle.abs() <= minSnappingAngle) {
+        plankRod.angle = 0;
+      } else {
+        plankRod.angle += .5 * dt;
+      }
+    } else if (plankRod.angle <= maxTiltAngle &&
+        plankRod.angle >= 0.0 &&
+        tilt == 0) {
+      if (plankRod.angle.abs() <= minSnappingAngle) {
+        plankRod.angle = 0;
+      } else {
+        plankRod.angle -= .5 * dt;
+      }
+    } else if (plankRod.angle <= -maxTiltAngle && tilt == -1) {
       tilt = 1;
     } else if (plankRod.angle >= maxTiltAngle && tilt == 1) {
       tilt = -1;
-    }
-    if (tilt == 1) {
+    } else if (tilt == 1) {
       plankRod.angle += .5 * dt;
-    } else {
+    } else if (tilt == -1) {
       plankRod.angle -= .5 * dt;
     }
+    // print(tilt);
 
     weights.forEach((element) {
       if (element.onWeight == true && element._isDragged == false) {
@@ -210,5 +225,6 @@ class MyDragSpriteComponent extends SpriteComponent
     onBalancePos = 1000;
     onWeight = false;
     if (onWeight == true) gameRef.takenPosition[minIndex] = human ? 0 : 1;
+    gameRef.tilt = 0;
   }
 }
