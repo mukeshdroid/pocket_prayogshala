@@ -22,7 +22,7 @@ class Lever1Game extends FlameGame with DragCallbacks {
   SpriteComponent fulcrum = SpriteComponent();
   List<MyDragSpriteComponent> weights = [];
   List<MyDragSpriteComponent> humans = [];
-  List<int> takenPosition = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1];
+  List<int> takenPosition = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   // this is initialized when the student asks presses the execute button
   // initialized as 1 for testing ( plank rod starts rotating clockwise)
   int tilt = 1;
@@ -63,16 +63,17 @@ class Lever1Game extends FlameGame with DragCallbacks {
     fulcrumPoint = fulcrum.x;
 
     for (int i = 1; i <= 5; i++) {
+      int tempX = 0;
       MyDragSpriteComponent weight = MyDragSpriteComponent()
         ..anchor = Anchor.center
         ..sprite = await loadSprite('weight.png')
-        ..size = Vector2(30, 30)
-        ..y = screenHeight - 50
-        ..x = screenWidth - 50 - (40) * i
-        ..initialPosition =
-            Vector2(screenWidth - 50 - (40) * i, screenHeight - 50)
+        ..size = Vector2(30, 30) + Vector2(4, 4) * i.toDouble()
+        ..y = screenHeight - 30 - 2 * i
+        ..x = screenWidth - 50 - pow(i, 1.3) * 27
+        ..initialPosition = Vector2(
+            screenWidth - 50 - pow(i, 1.3) * 27, screenHeight - 30 - 2 * i)
+        ..objectWeight = 10 + 10 * i
         ..human = false;
-
       weights.add(weight);
       add(weights[i - 1]);
     }
@@ -81,34 +82,62 @@ class Lever1Game extends FlameGame with DragCallbacks {
       MyDragSpriteComponent human = MyDragSpriteComponent()
         ..anchor = Anchor.center
         ..sprite = await loadSprite('boy.png')
-        ..size = Vector2(50, 50)
-        ..y = screenHeight - 50
-        ..x = 50.0 + 40 * i
-        ..initialPosition = Vector2(50.0 + 40 * i, screenHeight - 50)
+        ..size = Vector2(80, 80) + Vector2(4, 4) * i.toDouble()
+        ..y = screenHeight - 50 - 2 * i
+        ..x = 50.0 + 44 * i
+        ..initialPosition = Vector2(50.0 + 44 * i, screenHeight - 50 - 2 * i)
+        ..objectWeight = 10 + 10 * i
         ..human = true;
       humans.add(human);
       add(humans[i - 1]);
     }
   }
 
-  // @override
-  // Future<void> onMount() async {
-  //   // await super.onMount();
-  //   // if attached==true
-  // }
+  int isBalanced() {
+    int rightSum = 0;
+    int leftSum = 0;
+    weights.forEach((element) {
+      if (element.onWeight == true) {
+        if (element.onBalancePos < 5) {
+          leftSum =
+              leftSum + element.objectWeight * (5 - element.onBalancePos).abs();
+        } else {
+          rightSum =
+              rightSum + element.objectWeight * (element.onBalancePos - 4);
+        }
+      }
+    });
+    humans.forEach((element) {
+      if (element.onWeight == true) {
+        if (element.onBalancePos < 5) {
+          leftSum =
+              leftSum + element.objectWeight * (5 - element.onBalancePos).abs();
+        } else {
+          rightSum =
+              rightSum + element.objectWeight * (element.onBalancePos - 4);
+        }
+      }
+    });
+    if (leftSum == rightSum) {
+      return 0;
+    } else if (leftSum > rightSum) {
+      return -1;
+    } else {
+      return 1;
+    }
+  }
 
   @override
   void update(double dt) {
     super.update(dt);
-    if (plankRod.angle >= -maxTiltAngle && plankRod.angle <= 0.0 && tilt == 0) {
+    tilt = isBalanced();
+    if (plankRod.angle >= -100 && plankRod.angle <= 0.0 && tilt == 0) {
       if (plankRod.angle.abs() <= minSnappingAngle) {
         plankRod.angle = 0;
       } else {
         plankRod.angle += .5 * dt;
       }
-    } else if (plankRod.angle <= maxTiltAngle &&
-        plankRod.angle >= 0.0 &&
-        tilt == 0) {
+    } else if (plankRod.angle <= 100 && plankRod.angle >= 0.0 && tilt == 0) {
       if (plankRod.angle.abs() <= minSnappingAngle) {
         plankRod.angle = 0;
       } else {
@@ -123,7 +152,6 @@ class Lever1Game extends FlameGame with DragCallbacks {
     } else if (tilt == -1) {
       plankRod.angle -= .5 * dt;
     }
-    // print(tilt);
 
     weights.forEach((element) {
       if (element.onWeight == true && element._isDragged == false) {
@@ -159,7 +187,7 @@ class MyDragSpriteComponent extends SpriteComponent
     Vector2(750, 310)
   ];
 
-  static double snapDistance = 50;
+  static double snapDistance = 80;
   // index of where the position of the object is
   // 1000 implies does not exist on balance
   int onBalancePos = 1000;
@@ -171,6 +199,7 @@ class MyDragSpriteComponent extends SpriteComponent
   bool human = false;
   late Vector2 initialPosition;
   late Vector2 currentPosition;
+  late int objectWeight;
 
   Vector2 temp_Position = Vector2(0, 0);
 
@@ -206,25 +235,49 @@ class MyDragSpriteComponent extends SpriteComponent
     if (!human) {
       snapPosition.y += 10;
     }
-    if (minDistance <= snapDistance &&
-        (((gameRef.takenPosition[minIndex] == 0) && human) ||
-            ((gameRef.takenPosition[minIndex] == 1) && !human))) {
-      position.setFrom(snapPosition);
-      onBalancePos = minIndex;
-      gameRef.takenPosition[minIndex] = human ? 1 : 2;
-      distFromFulcrum = 500 - position.x.toInt();
-      onWeight = true;
+    late bool snappable;
+    (minDistance <= snapDistance) ? snappable = true : snappable = false;
+    // till this point we have
+    // minDistance - that gives the distance to the closest snappable point
+    // snapPosition - where to snap if snapped
+    // minIndex - index of snapPosition
+    // snappable - if the snapping criteria is fulfilled
+    // onWeight - if the load is on the lever/plank/balance
+
+    if (onWeight == true) {
+      if (snappable) {
+        // remove the current snap
+        resetSnap();
+        // transfer to new snap to point with index minIndex
+        // and snapPosition = snapPosition
+        snapTo(minIndex, snapPosition);
+      } else {
+        resetSnap();
+      }
     } else {
-      objectUnsnap(minIndex);
+      if (snappable) {
+        snapTo(minIndex, snapPosition);
+      } else {
+        resetSnap();
+      }
     }
   }
 
-  void objectUnsnap(int minIndex) {
+  void resetSnap() {
     position.setFrom(initialPosition);
     angle = 0;
+    if (onBalancePos != 1000) {
+      gameRef.takenPosition[onBalancePos] = 0;
+    }
     onBalancePos = 1000;
     onWeight = false;
-    if (onWeight == true) gameRef.takenPosition[minIndex] = human ? 0 : 1;
-    gameRef.tilt = 0;
+  }
+
+  void snapTo(index, snapPosition) {
+    position.setFrom(snapPosition);
+    onBalancePos = index;
+    gameRef.takenPosition[index] = 1;
+    distFromFulcrum = 500 - position.x.toInt();
+    onWeight = true;
   }
 }
