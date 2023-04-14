@@ -4,6 +4,8 @@ import 'wordgen.dart';
 import 'physics.dart';
 import 'lever1.dart';
 import 'lever2.dart';
+import 'acidbase.dart';
+import 'buildanatom.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -50,6 +52,12 @@ class _MyHomePageState extends State<MyHomePage> {
       case 4:
         page = Lever2();
         break;
+      case 5:
+        page = acidBasePage();
+        break;
+      case 6:
+        page = BuildAtom();
+        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -81,6 +89,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   NavigationRailDestination(
                     icon: Icon(Icons.gamepad),
                     label: Text('Lever2'),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.gamepad),
+                    label: Text('Acid or Base'),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.gamepad),
+                    label: Text('Building An Atom'),
                   ),
                 ],
                 selectedIndex: selectedIndex,
