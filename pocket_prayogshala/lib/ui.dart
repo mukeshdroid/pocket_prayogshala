@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'wordgen.dart';
 import 'physics.dart';
 import 'lever1.dart';
-import 'lever2.dart';
 import 'modules/acid-base/acidbase.dart';
+import 'modules/lever2/lever2.dart';
 import 'buildanatom.dart';
 
 class MyApp extends StatelessWidget {
