@@ -4,6 +4,7 @@ import 'wordgen.dart';
 import 'physics.dart';
 import 'lever1.dart';
 import 'lever2.dart';
+import 'tryText.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -50,6 +51,9 @@ class _MyHomePageState extends State<MyHomePage> {
       case 4:
         page = Lever2();
         break;
+      case 5:
+        page = tryText();
+        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -81,6 +85,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   NavigationRailDestination(
                     icon: Icon(Icons.gamepad),
                     label: Text('Lever2'),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.gamepad),
+                    label: Text('tryText'),
                   ),
                 ],
                 selectedIndex: selectedIndex,

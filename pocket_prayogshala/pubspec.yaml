@@ -26,8 +26,13 @@ flutter:
   uses-material-design: true
 
   assets: 
+    - assets/images/
     - assets/images/boy.png
     - assets/images/girl.png
     - assets/images/bg.jpg
-    - assets/images/
+    - assets/images/supari_full.png
+    - assets/images/supari_half.png
+    - assets/images/supari_quarter.png
+    - assets/images/supari_little.png
+    - assets/
 
