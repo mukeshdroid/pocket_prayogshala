@@ -4,7 +4,7 @@ import 'wordgen.dart';
 import 'physics.dart';
 import 'lever1.dart';
 import 'lever2.dart';
-import 'acidbase.dart';
+import 'modules/acid-base/acidbase.dart';
 import 'buildanatom.dart';
 
 class MyApp extends StatelessWidget {
