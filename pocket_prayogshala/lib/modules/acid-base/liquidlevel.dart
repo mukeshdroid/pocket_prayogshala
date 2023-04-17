@@ -9,8 +9,7 @@ import 'dart:math';
 
 class LiquidLevel extends SpriteComponent with HasGameRef<AcidBaseGame> {
   LiquidLevel({super.size});
-  //useful constants
-  final kw = 1.01 * pow(10, -14); // atomization of water
+
   // variables to handle color of water
   int currentOpacity = 50;
   int currentR = 173;
@@ -72,9 +71,9 @@ class LiquidLevel extends SpriteComponent with HasGameRef<AcidBaseGame> {
   };
 
   static Map<String, List> agent = {
-    'water': [255, 225, 225, 0, 255, 173, 216, 230],
-    'phenolphthalein': [255, 200, 0, 0, 255, 200, 0, 0],
-    'methylOrange': [255, 200, 0, 0, 255, 200, 0, 0],
+    'water': [173, 216, 230, 173, 216, 230],
+    'phenolphthalein': [173, 216, 230, 255, 255, 0],
+    'methylOrange': [173, 216, 230, 225, 225, 0],
   };
 
   void updateColor2() {}
@@ -127,7 +126,6 @@ class LiquidLevel extends SpriteComponent with HasGameRef<AcidBaseGame> {
     // todo :function to calculate the concentration of h+ of the solution
     // using the list 'liquidsAdded'
     conc = 0.5;
-
     // end here
     return -1 * log(conc) / ln10;
   }

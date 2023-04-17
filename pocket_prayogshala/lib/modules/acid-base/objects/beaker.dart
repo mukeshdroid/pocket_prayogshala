@@ -23,6 +23,6 @@ class Beaker extends SpriteComponent with HasGameRef<AcidBaseGame> {
     size = Vector2(beakerSize, beakerSize);
     y = gameRef.size[1] / 2 + 140;
     x = gameRef.size[0] / 2;
-    priority = 3;
+    priority = 4;
   }
 }
