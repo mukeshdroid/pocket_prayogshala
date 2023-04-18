@@ -13,6 +13,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_native_splash: ^2.2.19
+
   english_words: ^4.0.0
   provider: ^6.0.0
 
@@ -21,6 +23,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^2.0.0
+  msix: ^3.10.1
 
 flutter:
   uses-material-design: true
@@ -35,4 +38,9 @@ flutter:
     - assets/images/supari_quarter.png
     - assets/images/supari_little.png
     - assets/
+
+flutter_native_splash:
+  image: assets/images/splash.jpg
+  color: "42a5f5"
+  fill: true
 
