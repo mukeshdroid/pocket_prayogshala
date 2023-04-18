@@ -26,7 +26,6 @@ class MyDragSpriteLeverArm extends SpriteComponent
 
   @override
   void onDragUpdate(DragUpdateEvent event) {
-    // position += event.delta;
     var delTheta = event.delta[1];
     var resistance = 0.005; //normal resistive force of lever under no load
 
@@ -39,8 +38,7 @@ class MyDragSpriteLeverArm extends SpriteComponent
         resistance = 0.005 - (0.005 / maxForce) * gameRef.leverForce;
       }
     }
-    print(gameRef.leverForce);
-    print(resistance);
+
     if (angle <= gameRef.maxOpenAngle && angle >= gameRef.minOpenAngle) {
       if (delTheta < 0) {
         angle += 0.005 * delTheta;
@@ -56,17 +54,16 @@ class MyDragSpriteLeverArm extends SpriteComponent
     if (!(gameRef.whichSupari == -1)) {
       var maxForce = gameRef.suparis[gameRef.whichSupari].crackingForce;
       if (gameRef.leverForce > maxForce) {
-        angle = angle - 0.1;
+        angle = angle - 0.01;
       }
+    }
+    _isDragged = false;
 
-      _isDragged = false;
-
-      if (angle >= gameRef.maxOpenAngle) {
-        angle = gameRef.maxOpenAngle - 0.01;
-      }
-      if (angle <= gameRef.minOpenAngle) {
-        angle = gameRef.minOpenAngle + 0.01;
-      }
+    if (angle >= gameRef.maxOpenAngle) {
+      angle = gameRef.maxOpenAngle;
+    }
+    if (angle <= gameRef.minOpenAngle) {
+      angle = gameRef.minOpenAngle;
     }
   }
 
@@ -74,9 +71,7 @@ class MyDragSpriteLeverArm extends SpriteComponent
   void onCollision(Set<Vector2> points, PositionComponent other) {
     if (other is ScreenHitbox) {
       //...
-    } else if (other is MyDragSpriteSupari) {
-      //print("hit!!!");
-    }
+    } else if (other is MyDragSpriteSupari) {}
   }
 
   @override

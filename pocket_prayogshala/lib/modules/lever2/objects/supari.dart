@@ -14,6 +14,12 @@ class MyDragSpriteSupari extends SpriteComponent
   late double crackingForce;
   bool isOnLever = false;
 
+  late Sprite sprite1;
+  late Sprite sprite2;
+  late Sprite sprite3;
+  late Sprite sprite4;
+  late Sprite spritecracked;
+
   @override
   Future<void> onLoad() async {
     add(CircleHitbox());
@@ -46,6 +52,7 @@ class MyDragSpriteSupari extends SpriteComponent
       gameRef.whichRung = -1;
       gameRef.whichSupari = -1;
     }
+    print(size);
   }
 
   void snap() {
@@ -77,7 +84,7 @@ class MyDragSpriteSupari extends SpriteComponent
       //go back to original location
       position = gameRef.supariLoc[index];
       isOnLever = false;
-      sprite = gameRef.supariNormal;
+      updateSprite(sprite1);
     }
   }
 
@@ -95,16 +102,21 @@ class MyDragSpriteSupari extends SpriteComponent
     if (isOnLever) {
       double fratio = crackingForce / (gameRef.leverForce + 1);
       if (fratio < 10 && fratio > 5) {
-        sprite = gameRef.supariCrackedlittle;
+        updateSprite(sprite2);
       } else if (fratio <= 5 && fratio > 3) {
-        sprite = gameRef.supariCrackedquarter;
+        updateSprite(sprite3);
       } else if (fratio <= 3 && fratio > 1) {
-        sprite = gameRef.supariCrackedhalf;
+        updateSprite(sprite4);
       } else if (fratio <= 1) {
-        sprite = gameRef.supariCrackedFull;
+        updateSprite(spritecracked);
       } else {
-        sprite = gameRef.supariNormal;
+        updateSprite(sprite1);
       }
     }
+  }
+
+  void updateSprite(Sprite newSprite) {
+    sprite = newSprite;
+    size = Vector2(gameRef.supariSize[index], gameRef.supariSize[index]);
   }
 }
