@@ -6,9 +6,9 @@ import 'package:flame/effects.dart';
 import 'package:flame/components.dart';
 import '../acidbase.dart';
 
-class Beaker extends SpriteComponent with HasGameRef<AcidBaseGame> {
+class Beaker extends SpriteComponent with HasGameRef {
   Beaker({super.size});
-  final double beakerSize = 180 * 1.3;
+  late double beakerSize = 180 * 1.3;
 
   @override
   void update(double dt) {
@@ -23,6 +23,6 @@ class Beaker extends SpriteComponent with HasGameRef<AcidBaseGame> {
     size = Vector2(beakerSize, beakerSize);
     y = gameRef.size[1] / 2 + 140;
     x = gameRef.size[0] / 2;
-    priority = 3;
+    priority = 4;
   }
 }
