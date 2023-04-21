@@ -8,7 +8,7 @@ import 'package:flame/effects.dart';
 import '../acidbase.dart';
 import 'dart:math';
 
-class Liquid extends SpriteComponent with HasGameRef {
+class Liquid extends SpriteComponent with HasGameRef<AcidBaseCheckGame> {
   Liquid({super.size});
   late double beakerSize;
   late double amountOfAcid = 0;
