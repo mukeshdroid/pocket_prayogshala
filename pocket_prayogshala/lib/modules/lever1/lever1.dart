@@ -1,6 +1,5 @@
 //import 'dart:ffi';
 import 'dart:math';
-import 'dart:ui' hide TextStyle;
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/rendering.dart';
+import 'objects/MyDragComponet.dart';
 
 Vector2 updateSnapPos(Vector2 vector, Vector2 center, double angle) {
   Vector2 temp1 = vector - center;
@@ -30,7 +30,6 @@ class Lever1Game extends FlameGame with DragCallbacks {
   SpriteComponent plankRod = SpriteComponent();
   SpriteComponent fulcrum = SpriteComponent();
   SpriteComponent grass = SpriteComponent();
-  // TextComponent weight = TextComponent('10kg');
   List<MyDragSpriteComponent> weights = [];
   List<MyDragSpriteComponent> humans = [];
   List<int> takenPosition = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -46,8 +45,6 @@ class Lever1Game extends FlameGame with DragCallbacks {
   List<Vector2> snappablePositionsMain = [];
   late double gap;
 
-  late final style = TextStyle(color: Color(0xffffffff));
-  late final regular = TextPaint(style: style);
   // !!!!!!!!!!!!
   // this might not work for testing
   // @override
@@ -71,11 +68,10 @@ class Lever1Game extends FlameGame with DragCallbacks {
     add(backgroundImage);
 
     plankRod
-      ..anchor = Anchor.bottomCenter
+      ..anchor = Anchor.center
       ..sprite = await loadSprite('plank.png')
       ..size = Vector2(0.7 * screenWidth, 0.05 * screenHeight)
-      ..y = screenHeight * 0.52
-      ..priority = 1
+      ..y = screenHeight / 2
       ..x = screenWidth / 2;
     add(plankRod);
 
@@ -84,10 +80,9 @@ class Lever1Game extends FlameGame with DragCallbacks {
     fulcrum
       ..anchor = Anchor.center
       ..sprite = await loadSprite('plankBase.png')
-      ..size = Vector2(0.1 * screenWidth, 0.25 * screenHeight)
+      ..size = Vector2(150, 150)
       ..y = screenHeight / 2 + 0.11 * screenHeight
-      ..priority = 0
-      ..x = screenWidth / 2;
+      ..x = screenWidth / 2 - 0.005 * screenWidth;
     add(fulcrum);
 
     grass
@@ -98,12 +93,13 @@ class Lever1Game extends FlameGame with DragCallbacks {
       ..x = screenWidth / 2;
     add(grass);
 
-    add(TextComponent(text: 'Hello, Flame', textRenderer: regular)
-      ..anchor = Anchor.topCenter
-      ..x = screenWidth / 2 // size is a property from game
-      ..y = 32.0);
+    // snappablePositions.addAll(
+    //     Vector2(plankRod.x - plankRod.size.x / 2, plankRod.y),
+    //     Vector2(plankRod.x - plankRod.size.x / 2 + gap, plankRod.y),
+    //     Vector2(plankRod.x - plankRod.size.x / 2 + 2 * gap, plankRod.y),
+    //     Vector2(plankRod.x - plankRod.size.x / 2 + 3 * gap, plankRod.y),
+    //     Vector2(plankRod.x - plankRod.size.x / 2 + 4 * gap, plankRod.y));
 
-    print(plankRod.size);
     for (int i = 0; i < 5; i++) {
       snappablePositionsMain
           .add(Vector2(plankRod.x - plankRod.size.x / 2 + i * gap, plankRod.y));
@@ -144,6 +140,14 @@ class Lever1Game extends FlameGame with DragCallbacks {
       humans.add(human);
       add(humans[i - 1]);
     }
+
+    humans.forEach((elem) {
+      add(elem.weighttext);
+    });
+
+    weights.forEach((elem) {
+      add(elem.weighttext);
+    });
   }
 
   int isBalanced() {
@@ -184,6 +188,7 @@ class Lever1Game extends FlameGame with DragCallbacks {
   void update(double dt) {
     super.update(dt);
     tilt = isBalanced();
+    //print(size);
     if (plankRod.angle >= -100 && plankRod.angle <= 0.0 && tilt == 0) {
       if (plankRod.angle.abs() <= minSnappingAngle) {
         plankRod.angle = 0;
@@ -205,26 +210,19 @@ class Lever1Game extends FlameGame with DragCallbacks {
     } else if (tilt == -1) {
       plankRod.angle -= .5 * dt;
     }
-    late int tempIndex;
 
-    for (int i = 1; i < 5; i++) {}
     weights.forEach((element) {
-      if (element.onWeight == true && element._isDragged == false) {
+      if (element.onWeight == true && element.isDragged == false) {
         element.angle = plankRod.angle;
-        // element.x = plankRod.x - snappablePositions[element.onBalancePos] * cos(element.angle);
-        // element.y = plankRod.y - element.distFromFulcrum * sin(element.angle);
-        //alternative form for calculating distFromFulcrum
-        element.x = snappablePositions[element.onBalancePos].x;
-        element.y = snappablePositions[element.onBalancePos].y;
+        element.x = plankRod.x - element.distFromFulcrum * cos(element.angle);
+        element.y = plankRod.y - element.distFromFulcrum * sin(element.angle);
       }
     });
     humans.forEach((element) {
-      if (element.onWeight == true && element._isDragged == false) {
+      if (element.onWeight == true && element.isDragged == false) {
         element.angle = plankRod.angle;
-        // element.x = plankRod.x - element.distFromFulcrum * cos(element.angle);
-        // element.y = plankRod.y - element.distFromFulcrum * sin(element.angle);
-        element.x = snappablePositions[element.onBalancePos].x;
-        element.y = snappablePositions[element.onBalancePos].y;
+        element.x = plankRod.x - element.distFromFulcrum * cos(element.angle);
+        element.y = plankRod.y - element.distFromFulcrum * sin(element.angle);
       }
     });
     //
@@ -242,116 +240,6 @@ class Lever1Game extends FlameGame with DragCallbacks {
     }
 
     print(snappablePositions);
-  }
-}
-
-class MyDragSpriteComponent extends SpriteComponent
-    with DragCallbacks, HasGameRef<Lever1Game> {
-  MyDragSpriteComponent({super.size});
-
-  static List<Vector2> snappablePositions = [];
-
-  @override
-  FutureOr<void> onLoad() {
-    return super.onLoad();
-    snappablePositions = gameRef.snappablePositions;
-    gameRef
-        .add((TextComponent(text: 'Hello, Flame', textRenderer: gameRef.regular)
-          ..anchor = Anchor.topCenter
-          ..x = gameRef.size[0] / 2 // size is a property from game
-          ..y = 32.0));
-  }
-
-  static double snapDistance = 80;
-  // index of where the position of the object is
-  // 1000 implies does not exist on balance
-  int onBalancePos = 1000;
-  bool onWeight = false;
-  // this is temporary
-  late double distFromFulcrum;
-  // final _paint = Paint();
-  bool _isDragged = false;
-  bool human = false;
-  late Vector2 initialPosition;
-  late Vector2 currentPosition;
-  late int objectWeight;
-
-  Vector2 temp_Position = Vector2(0, 0);
-
-  @override
-  void onDragStart(DragStartEvent event) {
-    _isDragged = true;
-    temp_Position = Vector2.copy(position);
-  }
-
-  @override
-  void onDragUpdate(DragUpdateEvent event) {
-    position += event.delta;
-  }
-
-  @override
-  void onDragEnd(DragEndEvent event) {
-    _isDragged = false;
-    snap();
-  }
-
-  void snap() {
-    double minDistance = double.infinity;
-    Vector2 snapPosition = Vector2.zero();
-    List<double> distance = [];
-    for (final positions in gameRef.snappablePositions) {
-      distance.add(positions.distanceTo(position));
-    }
-    minDistance = distance.fold(
-        distance.first, (prev, current) => prev < current ? prev : current);
-    int minIndex = distance.indexOf(minDistance);
-    snapPosition = Vector2(gameRef.snappablePositions[minIndex].x,
-        gameRef.snappablePositions[minIndex].y);
-    late bool snappable;
-    (minDistance <= snapDistance && gameRef.takenPosition[minIndex] == 0)
-        ? snappable = true
-        : snappable = false;
-    // till this point we have
-    // minDistance - that gives the distance to the closest snappable point
-    // snapPosition - where to snap if snapped
-    // minIndex - index of snapPosition
-    // snappable - if the snapping criteria is fulfilled
-    // onWeight - if the load is on the lever/plank/balance
-
-    if (onWeight == true) {
-      if (snappable) {
-        // remove the current snap
-        resetSnap();
-        // transfer to new snap to point with index minIndex
-        // and snapPosition = snapPosition
-        snapTo(minIndex, snapPosition);
-      } else {
-        resetSnap();
-      }
-    } else {
-      if (snappable) {
-        snapTo(minIndex, snapPosition);
-      } else {
-        resetSnap();
-      }
-    }
-  }
-
-  void resetSnap() {
-    position.setFrom(initialPosition);
-    angle = 0;
-    if (onBalancePos != 1000) {
-      gameRef.takenPosition[onBalancePos] = 0;
-    }
-    onBalancePos = 1000;
-    onWeight = false;
-  }
-
-  void snapTo(index, snapPosition) {
-    position.setFrom(snapPosition);
-    onBalancePos = index;
-    gameRef.takenPosition[index] = 1;
-    distFromFulcrum = ((gameRef.plankRod.size.x) - snapPosition.x);
-    onWeight = true;
+    //print(updateSnapPos(Vector2(1, 0), Vector2(0, 0), pi / 2));
   }
 }
