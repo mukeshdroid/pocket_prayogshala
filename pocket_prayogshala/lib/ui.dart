@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
     List<List<String>> phyModules = [
       ["चाकल-चुकुल(see-saw)", 'walnut1.png'],
       ["सरौतो(Nutcracker)", 'walnut2.png'],
-      ["गति र प्रवेग(Velocity and Acceleration)", 'walnut3.png'],
+      ["गति र प्रवेग(Velocity and Acceleration)", 'speed.jpg'],
       ["वायुमण्डलीय दबाव(Atmospheric Pressure)", 'walnut4.png'],
       ["प्रकाश को अपवर्तन(Refraction of Light)", 'supari_quarter.png'],
       ["गतिज ऊर्जा(Kinetic Energy)", 'supari.png']
