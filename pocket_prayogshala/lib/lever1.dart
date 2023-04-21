@@ -9,9 +9,13 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/rendering.dart';
 
-// Vector2 updateSnapPos(angle) {
-
-// }
+Vector2 updateSnapPos(Vector2 vector, Vector2 center, double angle) {
+  Vector2 temp1 = vector - center;
+  Vector2 temp2 = vector - center;
+  temp1.x = temp1.x * cos(angle) - temp1.y * sin(angle);
+  temp2.y = temp2.x * sin(angle) + temp2.y * cos(angle);
+  return Vector2(temp1.x + center.x, temp2.y + center.y);
+}
 
 class Lever1 extends StatelessWidget {
   @override
@@ -176,7 +180,7 @@ class Lever1Game extends FlameGame with DragCallbacks {
   void update(double dt) {
     super.update(dt);
     tilt = isBalanced();
-    print(size);
+    //print(size);
     if (plankRod.angle >= -100 && plankRod.angle <= 0.0 && tilt == 0) {
       if (plankRod.angle.abs() <= minSnappingAngle) {
         plankRod.angle = 0;
@@ -216,18 +220,19 @@ class Lever1Game extends FlameGame with DragCallbacks {
     //
 
     //update snappable positions acc to angle
+    Vector2 center = Vector2(plankRod.x, plankRod.y);
     snappablePositions = [];
     for (int i = 0; i < 5; i++) {
-      snappablePositions.add(Vector2(
-          plankRod.x - (plankRod.size.x / 2 + i * gap) * cos(plankRod.angle),
-          plankRod.y * sin(plankRod.angle)));
+      snappablePositions.add(
+          updateSnapPos(snappablePositionsMain[i], center, plankRod.angle));
     }
-    for (int i = 0; i < 5; i++) {
-      snappablePositions.add(Vector2(
-          plankRod.x + ((i + 1) * gap) * cos(plankRod.angle),
-          plankRod.y * sin(plankRod.angle)));
+    for (int i = 5; i < 10; i++) {
+      snappablePositions.add(
+          updateSnapPos(snappablePositionsMain[i], center, plankRod.angle));
     }
+
     print(snappablePositions);
+    //print(updateSnapPos(Vector2(1, 0), Vector2(0, 0), pi / 2));
   }
 }
 
