@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ffi';
 import 'dart:math';
 import 'package:flame/events.dart';
@@ -7,6 +8,10 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/rendering.dart';
+
+// Vector2 updateSnapPos(angle) {
+
+// }
 
 class Lever1 extends StatelessWidget {
   @override
@@ -20,16 +25,30 @@ class Lever1Game extends FlameGame with DragCallbacks {
   SpriteComponent backgroundImage = SpriteComponent();
   SpriteComponent plankRod = SpriteComponent();
   SpriteComponent fulcrum = SpriteComponent();
+  SpriteComponent grass = SpriteComponent();
   List<MyDragSpriteComponent> weights = [];
   List<MyDragSpriteComponent> humans = [];
   List<int> takenPosition = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   // this is initialized when the student asks presses the execute button
+
   // initialized as 1 for testing ( plank rod starts rotating clockwise)
   int tilt = 1;
   // by how much should the lever be tilted
   double maxTiltAngle = pi / 10;
   double minSnappingAngle = 0.01;
   static late double fulcrumPoint;
+  List<Vector2> snappablePositions = [];
+  List<Vector2> snappablePositionsMain = [];
+  late double gap;
+
+  // !!!!!!!!!!!!
+  // this might not work for testing
+  // @override
+  // void onGameResize(Vector2 canvasSize) async {
+  //   // TODO: implement onGameResize
+  //   super.onGameResize(canvasSize);
+  //   await onLoad();
+  // }
 
   @override
   Future<void> onLoad() async {
@@ -39,29 +58,55 @@ class Lever1Game extends FlameGame with DragCallbacks {
     await super.onLoad();
 
     backgroundImage
-      ..sprite = await loadSprite('back.jpg')
+      ..sprite = await loadSprite('sky.jpg')
       ..size = size;
 
     add(backgroundImage);
 
     plankRod
       ..anchor = Anchor.center
-      ..sprite = await loadSprite('blackline_lever1.png')
-      ..size = Vector2(550, 200)
+      ..sprite = await loadSprite('plank.png')
+      ..size = Vector2(0.7 * screenWidth, 0.05 * screenHeight)
       ..y = screenHeight / 2
       ..x = screenWidth / 2;
     add(plankRod);
 
+    gap = plankRod.size.x / 10;
+
     fulcrum
       ..anchor = Anchor.center
-      ..sprite = await loadSprite('triangle.png')
-      ..size = Vector2(30, 30)
-      ..y = screenHeight / 2 + 20
-      ..x = screenWidth / 2;
+      ..sprite = await loadSprite('plankBase.png')
+      ..size = Vector2(150, 150)
+      ..y = screenHeight / 2 + 0.11 * screenHeight
+      ..x = screenWidth / 2 - 0.005 * screenWidth;
     add(fulcrum);
 
-    fulcrumPoint = fulcrum.x;
+    grass
+      ..anchor = Anchor.topCenter
+      ..sprite = await loadSprite('grass.png')
+      ..size = Vector2(screenWidth, 0.5 * screenHeight)
+      ..y = screenHeight / 2 + 0.2 * screenHeight
+      ..x = screenWidth / 2;
+    add(grass);
 
+    // snappablePositions.addAll(
+    //     Vector2(plankRod.x - plankRod.size.x / 2, plankRod.y),
+    //     Vector2(plankRod.x - plankRod.size.x / 2 + gap, plankRod.y),
+    //     Vector2(plankRod.x - plankRod.size.x / 2 + 2 * gap, plankRod.y),
+    //     Vector2(plankRod.x - plankRod.size.x / 2 + 3 * gap, plankRod.y),
+    //     Vector2(plankRod.x - plankRod.size.x / 2 + 4 * gap, plankRod.y));
+
+    for (int i = 0; i < 5; i++) {
+      snappablePositionsMain
+          .add(Vector2(plankRod.x - plankRod.size.x / 2 + i * gap, plankRod.y));
+    }
+    for (int i = 0; i < 5; i++) {
+      snappablePositionsMain
+          .add(Vector2(plankRod.x + (i + 1) * gap, plankRod.y));
+    }
+    snappablePositions = snappablePositionsMain.toList();
+
+    fulcrumPoint = fulcrum.x;
     for (int i = 1; i <= 5; i++) {
       int tempX = 0;
       MyDragSpriteComponent weight = MyDragSpriteComponent()
@@ -131,6 +176,7 @@ class Lever1Game extends FlameGame with DragCallbacks {
   void update(double dt) {
     super.update(dt);
     tilt = isBalanced();
+    print(size);
     if (plankRod.angle >= -100 && plankRod.angle <= 0.0 && tilt == 0) {
       if (plankRod.angle.abs() <= minSnappingAngle) {
         plankRod.angle = 0;
@@ -167,6 +213,21 @@ class Lever1Game extends FlameGame with DragCallbacks {
         element.y = plankRod.y - element.distFromFulcrum * sin(element.angle);
       }
     });
+    //
+
+    //update snappable positions acc to angle
+    snappablePositions = [];
+    for (int i = 0; i < 5; i++) {
+      snappablePositions.add(Vector2(
+          plankRod.x - (plankRod.size.x / 2 + i * gap) * cos(plankRod.angle),
+          plankRod.y * sin(plankRod.angle)));
+    }
+    for (int i = 0; i < 5; i++) {
+      snappablePositions.add(Vector2(
+          plankRod.x + ((i + 1) * gap) * cos(plankRod.angle),
+          plankRod.y * sin(plankRod.angle)));
+    }
+    print(snappablePositions);
   }
 }
 
@@ -174,18 +235,13 @@ class MyDragSpriteComponent extends SpriteComponent
     with DragCallbacks, HasGameRef<Lever1Game> {
   MyDragSpriteComponent({super.size});
 
-  static List<Vector2> snappablePositions = [
-    Vector2(250, 310),
-    Vector2(300, 310),
-    Vector2(350, 310),
-    Vector2(400, 310),
-    Vector2(450, 310),
-    Vector2(550, 310),
-    Vector2(600, 310),
-    Vector2(650, 310),
-    Vector2(700, 310),
-    Vector2(750, 310)
-  ];
+  static List<Vector2> snappablePositions = [];
+
+  @override
+  FutureOr<void> onLoad() {
+    return super.onLoad();
+    snappablePositions = gameRef.snappablePositions;
+  }
 
   static double snapDistance = 80;
   // index of where the position of the object is
@@ -224,14 +280,14 @@ class MyDragSpriteComponent extends SpriteComponent
     double minDistance = double.infinity;
     Vector2 snapPosition = Vector2.zero();
     List<double> distance = [];
-    for (final positions in snappablePositions) {
+    for (final positions in gameRef.snappablePositions) {
       distance.add(positions.distanceTo(position));
     }
     minDistance = distance.fold(
         distance.first, (prev, current) => prev < current ? prev : current);
     int minIndex = distance.indexOf(minDistance);
-    snapPosition =
-        Vector2(snappablePositions[minIndex].x, snappablePositions[minIndex].y);
+    snapPosition = Vector2(gameRef.snappablePositions[minIndex].x,
+        gameRef.snappablePositions[minIndex].y);
     if (!human) {
       snapPosition.y += 10;
     }
@@ -262,6 +318,12 @@ class MyDragSpriteComponent extends SpriteComponent
       }
     }
   }
+
+  // @override
+  // void update(double dt) {
+  //   // TODO: implement update
+  //   super.update(dt);
+  // }
 
   void resetSnap() {
     position.setFrom(initialPosition);
