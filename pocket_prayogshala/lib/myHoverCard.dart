@@ -13,26 +13,34 @@ class MyHoverCard extends StatefulWidget {
 
 class _MyHoverCardState extends State<MyHoverCard> {
   bool selected = false;
-  bool onHover = false;
+  bool isHover = false;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selected = !selected;
-        });
-      },
+    return Container(
       child: Center(
         child: AnimatedContainer(
-          width: selected ? 200.0 : 100.0,
-          height: selected ? 100.0 : 200.0,
-          color: selected ? Colors.red : Colors.blue,
-          alignment:
-              selected ? Alignment.center : AlignmentDirectional.topCenter,
-          duration: const Duration(seconds: 2),
-          curve: Curves.fastOutSlowIn,
-          child: Text(widget.title),
+          height: (isHover) ? 400 : 300,
+          width: (isHover) ? 400 : 300,
+          duration: Duration(milliseconds: 200),
+          padding: EdgeInsets.only(
+              top: (isHover) ? 25 : 30.0, bottom: !(isHover) ? 25 : 30),
+          child: Container(
+            height: 150,
+            color: Colors.blue,
+            child: InkWell(
+              onTap: () {},
+              child: Text(widget.title),
+              onHover: (val) {
+                print("Val--->{}$val");
+                setState(() {
+                  isHover = val;
+                });
+              },
+            ),
+            /*val--->true when user brings in mouse
+           val---> false when brings out his mouse*/
+          ),
         ),
       ),
     );
