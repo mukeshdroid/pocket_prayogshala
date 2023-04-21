@@ -7,6 +7,7 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/rendering.dart';
+import 'objects/MyDragComponet.dart';
 
 Vector2 updateSnapPos(Vector2 vector, Vector2 center, double angle) {
   Vector2 temp1 = vector - center;
@@ -139,6 +140,14 @@ class Lever1Game extends FlameGame with DragCallbacks {
       humans.add(human);
       add(humans[i - 1]);
     }
+
+    humans.forEach((elem) {
+      add(elem.weighttext);
+    });
+
+    weights.forEach((elem) {
+      add(elem.weighttext);
+    });
   }
 
   int isBalanced() {
@@ -203,14 +212,14 @@ class Lever1Game extends FlameGame with DragCallbacks {
     }
 
     weights.forEach((element) {
-      if (element.onWeight == true && element._isDragged == false) {
+      if (element.onWeight == true && element.isDragged == false) {
         element.angle = plankRod.angle;
         element.x = plankRod.x - element.distFromFulcrum * cos(element.angle);
         element.y = plankRod.y - element.distFromFulcrum * sin(element.angle);
       }
     });
     humans.forEach((element) {
-      if (element.onWeight == true && element._isDragged == false) {
+      if (element.onWeight == true && element.isDragged == false) {
         element.angle = plankRod.angle;
         element.x = plankRod.x - element.distFromFulcrum * cos(element.angle);
         element.y = plankRod.y - element.distFromFulcrum * sin(element.angle);
@@ -232,118 +241,5 @@ class Lever1Game extends FlameGame with DragCallbacks {
 
     print(snappablePositions);
     //print(updateSnapPos(Vector2(1, 0), Vector2(0, 0), pi / 2));
-  }
-}
-
-class MyDragSpriteComponent extends SpriteComponent
-    with DragCallbacks, HasGameRef<Lever1Game> {
-  MyDragSpriteComponent({super.size});
-
-  static List<Vector2> snappablePositions = [];
-
-  @override
-  FutureOr<void> onLoad() {
-    return super.onLoad();
-    snappablePositions = gameRef.snappablePositions;
-  }
-
-  static double snapDistance = 80;
-  // index of where the position of the object is
-  // 1000 implies does not exist on balance
-  int onBalancePos = 1000;
-  bool onWeight = false;
-  // this is temporary
-  int distFromFulcrum = 250;
-  // final _paint = Paint();
-  bool _isDragged = false;
-  bool human = false;
-  late Vector2 initialPosition;
-  late Vector2 currentPosition;
-  late int objectWeight;
-
-  Vector2 temp_Position = Vector2(0, 0);
-
-  @override
-  void onDragStart(DragStartEvent event) {
-    _isDragged = true;
-    temp_Position = Vector2.copy(position);
-  }
-
-  @override
-  void onDragUpdate(DragUpdateEvent event) {
-    position += event.delta;
-  }
-
-  @override
-  void onDragEnd(DragEndEvent event) {
-    _isDragged = false;
-    snap();
-  }
-
-  void snap() {
-    double minDistance = double.infinity;
-    Vector2 snapPosition = Vector2.zero();
-    List<double> distance = [];
-    for (final positions in gameRef.snappablePositions) {
-      distance.add(positions.distanceTo(position));
-    }
-    minDistance = distance.fold(
-        distance.first, (prev, current) => prev < current ? prev : current);
-    int minIndex = distance.indexOf(minDistance);
-    snapPosition = Vector2(gameRef.snappablePositions[minIndex].x,
-        gameRef.snappablePositions[minIndex].y);
-    if (!human) {
-      snapPosition.y += 10;
-    }
-    late bool snappable;
-    (minDistance <= snapDistance) ? snappable = true : snappable = false;
-    // till this point we have
-    // minDistance - that gives the distance to the closest snappable point
-    // snapPosition - where to snap if snapped
-    // minIndex - index of snapPosition
-    // snappable - if the snapping criteria is fulfilled
-    // onWeight - if the load is on the lever/plank/balance
-
-    if (onWeight == true) {
-      if (snappable) {
-        // remove the current snap
-        resetSnap();
-        // transfer to new snap to point with index minIndex
-        // and snapPosition = snapPosition
-        snapTo(minIndex, snapPosition);
-      } else {
-        resetSnap();
-      }
-    } else {
-      if (snappable) {
-        snapTo(minIndex, snapPosition);
-      } else {
-        resetSnap();
-      }
-    }
-  }
-
-  // @override
-  // void update(double dt) {
-  //   // TODO: implement update
-  //   super.update(dt);
-  // }
-
-  void resetSnap() {
-    position.setFrom(initialPosition);
-    angle = 0;
-    if (onBalancePos != 1000) {
-      gameRef.takenPosition[onBalancePos] = 0;
-    }
-    onBalancePos = 1000;
-    onWeight = false;
-  }
-
-  void snapTo(index, snapPosition) {
-    position.setFrom(snapPosition);
-    onBalancePos = index;
-    gameRef.takenPosition[index] = 1;
-    distFromFulcrum = 500 - position.x.toInt();
-    onWeight = true;
   }
 }
