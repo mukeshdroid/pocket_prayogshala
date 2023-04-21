@@ -16,13 +16,42 @@ class SecondRoute extends StatelessWidget {
         title: Text('Second Page'),
       ),
       body: Center(
-        child: ElevatedButton(
-          child: Text('Go To Previous Page'),
-          //color: Colors.blue.shade900,
-          //textColor: Colors.white,
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.5,
+                height: MediaQuery.of(context).size.height * 0.5,
+                decoration:
+                    BoxDecoration(color: Color.fromARGB(255, 234, 228, 228)),
+                child: Image.asset(
+                  'assets/images/lever2_bg.jpg',
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.5,
+                height: MediaQuery.of(context).size.height * 0.5,
+                decoration: BoxDecoration(color: Colors.yellow),
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    decoration:
+                        BoxDecoration(color: Color.fromARGB(255, 117, 63, 63)),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
