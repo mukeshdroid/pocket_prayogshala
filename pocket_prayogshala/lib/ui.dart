@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/gestures.dart';
 import 'wordgen.dart';
 import 'physics.dart';
 import 'lever1.dart';
 import 'modules/acid-base/acidbase.dart';
 import 'modules/lever2/lever2.dart';
 import 'buildanatom.dart';
+import 'myHoverCard.dart';
+
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+      };
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -20,9 +31,40 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
             colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.amber)),
         home: MyHomePage(),
+        scrollBehavior: MyCustomScrollBehavior(),
       ),
     );
   }
+}
+
+Widget box(String title, Color backgroundcolor) {
+  return Container(
+      margin: EdgeInsets.all(10),
+      width: 280,
+      color: backgroundcolor,
+      alignment: Alignment.center,
+      child: Text(title, style: TextStyle(color: Colors.white, fontSize: 20)));
+}
+
+Widget horizontalScrollCreate(String title, var moduleList) {
+  return Container(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        children: [
+          Container(
+              height: 50,
+              color: Colors.amber[100],
+              child: Center(child: Text(title))),
+          Container(
+              height: 100,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: moduleList.map<Widget>((module) {
+                  return MyHoverCard(title: module);
+                }).toList(),
+              )),
+        ],
+      ));
 }
 
 class MyHomePage extends StatefulWidget {
@@ -63,59 +105,95 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return LayoutBuilder(builder: (context, Constraints) {
-      return Scaffold(
-        body: Row(
-          children: [
-            SafeArea(
-              child: NavigationRail(
-                extended: Constraints.maxWidth >= 600,
-                destinations: [
-                  NavigationRailDestination(
-                    icon: Icon(Icons.home),
-                    label: Text('Home'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.favorite),
-                    label: Text('Fav'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.gamepad),
-                    label: Text('physics'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.gamepad),
-                    label: Text('Lever1'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.gamepad),
-                    label: Text('Lever2'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.gamepad),
-                    label: Text('Acid or Base'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.gamepad),
-                    label: Text('Building An Atom'),
-                  ),
-                ],
-                selectedIndex: selectedIndex,
-                onDestinationSelected: (value) {
-                  setState(() {
-                    selectedIndex = value;
-                  });
-                },
-              ),
-            ),
-            Expanded(
-              child: Container(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                child: page,
-              ),
-            )
-          ],
-        ),
+      var mainArea = Container(
+        height: 500,
+        color: Theme.of(context).colorScheme.primaryContainer,
+        child: page,
       );
+
+      var bodyRow = Row(
+        children: [
+          mainArea,
+        ],
+      );
+
+      List<String> phyModules = [
+        "sdasdas",
+        "asdasd",
+        "Iasd",
+        "adasd",
+        "gfhfg",
+        "cvxcv"
+      ];
+
+      List<String> chemModules = [
+        "sdasdas",
+        "asdasd",
+        "Iasd",
+        "adasd",
+        "gfhfg",
+        "cvxcv"
+      ];
+
+      List<String> mathModules = [
+        "sdasdas",
+        "asdasd",
+        "Iasd",
+        "adasd",
+        "gfhfg",
+        "cvxcv"
+      ];
+
+      List<String> bioModules = [
+        "sdasdas",
+        "asdasd",
+        "Iasd",
+        "adasd",
+        "gfhfg",
+        "cvxcv"
+      ];
+
+      var verticalScroll = ListView(
+        padding: const EdgeInsets.all(8),
+        children: [
+          horizontalScrollCreate('Physcis', phyModules),
+          horizontalScrollCreate('Chemistry', chemModules),
+          horizontalScrollCreate('Biology', bioModules),
+          horizontalScrollCreate('Maths', mathModules),
+        ],
+      );
+
+      var titleText = Container(
+          height: 50,
+          child: const Text(
+            'Hello',
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ));
+
+      var titleBar = Container(
+          color: Colors.cyan,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              titleText,
+            ],
+          ));
+
+      var bodyColumn = Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          titleBar,
+          //mainArea,
+          //bodyRow,
+          //horizontalScroll,
+          verticalScroll,
+        ],
+      );
+
+      return Scaffold(body: verticalScroll //bodyColumn,
+          );
     });
   }
 }
