@@ -18,7 +18,7 @@ class acidBasePage extends StatelessWidget {
 
 class AcidBaseCheckGame extends FlameGame with DragCallbacks {
   SpriteComponent backgroundImage = SpriteComponent();
-  Beaker beaker = Beaker();
+  SpriteComponent beaker = SpriteComponent();
   SpriteComponent beakerPhenolphthalein = SpriteComponent();
   SpriteComponent beakerMethylOrange = SpriteComponent();
   RectangleComponent rect = RectangleComponent();
@@ -31,17 +31,19 @@ class AcidBaseCheckGame extends FlameGame with DragCallbacks {
     final screenWidth = size[0];
     final screenHeight = size[1];
     await super.onLoad();
+    backgroundImage
+      ..sprite = await loadSprite('back.jpg')
+      ..size = size;
+
+    add(backgroundImage);
 
     beaker
+      ..sprite = await loadSprite('beaker.png')
       ..size = Vector2(beakerSize, beakerSize)
       ..anchor = Anchor.bottomCenter
-      ..y = screenHeight / 2 + 140
+      ..y = screenHeight * 0.85
       ..x = screenWidth / 2
       ..priority = 3;
-    backgroundImage
-      ..sprite = await loadSprite('bg.jpg')
-      ..size = size
-      ..priority = 1;
     pipett
       ..sprite = await loadSprite('bg.jpg')
       ..size = Vector2(150, 150)
@@ -49,20 +51,20 @@ class AcidBaseCheckGame extends FlameGame with DragCallbacks {
       ..x = 200
       ..priority = 5;
     beakerPhenolphthalein
-      ..sprite = await loadSprite('bg.jpg')
+      ..sprite = await loadSprite('beakerPhen.png')
       ..size = Vector2(150, 150)
       ..anchor = Anchor.bottomCenter
-      ..y = screenHeight / 2 + 260
-      ..x = screenWidth / 2 + screenWidth / 4 + screenWidth / 16
+      ..y = screenHeight * 0.85
+      ..x = screenWidth * 0.2
       ..priority = 5;
     // print('the size is $size');
 
     beakerMethylOrange
-      ..sprite = await loadSprite('bg.jpg')
+      ..sprite = await loadSprite('beakerMeth.png')
       ..size = Vector2(150, 150)
       ..anchor = Anchor.bottomCenter
-      ..y = screenHeight / 2 + 260
-      ..x = screenWidth / 2 - screenWidth / 4 - screenWidth / 16
+      ..y = screenHeight * 0.85
+      ..x = screenWidth * 0.8
       ..priority = 4;
 
     add(pipett);
@@ -80,5 +82,6 @@ class AcidBaseCheckGame extends FlameGame with DragCallbacks {
         EffectController(duration: 0.0)));
     liquid.add(
         OpacityEffect.to(liquid.liquidOpacity, EffectController(duration: 0)));
+    print(size);
   }
 }
