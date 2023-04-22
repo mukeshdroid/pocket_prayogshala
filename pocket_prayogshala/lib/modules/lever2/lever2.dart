@@ -11,7 +11,13 @@ import 'objects/textBox.dart';
 class Lever2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GameWidget(game: Lever2Game());
+    return Scaffold(
+      appBar: AppBar(
+        leading: Image.asset('assets/images/logo.png'),
+        title: Text('Pocket Prayogshala'),
+      ),
+      body: GameWidget(game: Lever2Game()), //bodyColumn,
+    );
   }
 }
 

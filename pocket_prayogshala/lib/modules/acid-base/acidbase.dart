@@ -9,10 +9,16 @@ import 'package:flame/game.dart';
 import 'package:flame/effects.dart';
 import 'objects/beaker.dart';
 
-class acidBasePage extends StatelessWidget {
+class acidBase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GameWidget(game: AcidBaseCheckGame());
+    return Scaffold(
+        appBar: AppBar(
+          leading: Image.asset('assets/images/logo.png'),
+          title: Text('Pocket Prayogshala'),
+        ),
+        body: GameWidget(game: AcidBaseCheckGame()) //bodyColumn,
+        );
   }
 }
 

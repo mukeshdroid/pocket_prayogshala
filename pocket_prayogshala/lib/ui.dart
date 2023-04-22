@@ -157,8 +157,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
         appBar: AppBar(
-          leading: Image.asset('assets/images/logo.png'),
-          title: Text('Pocket Prayogshala'),
+          title: Image(
+            image: AssetImage('assets/images/logo.png'),
+            fit: BoxFit.contain,
+            height: AppBar().preferredSize.height,
+          ),
+          centerTitle: true,
         ),
         body: verticalScroll //bodyColumn,
         );

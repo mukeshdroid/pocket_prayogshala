@@ -1,4 +1,4 @@
-import 'package:first_app_flutter/modules/lever1/lever1.dart';
+import 'package:first_app_flutter/modules/acid-base/acidbase.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:flame/events.dart';
@@ -15,7 +15,7 @@ class AcidBasePage extends StatelessWidget {
     var moduleThumbnail = InkWell(
         onTap: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Lever1()));
+              context, MaterialPageRoute(builder: (context) => acidBase()));
         },
         child: Expanded(
           flex: 1,

@@ -20,7 +20,13 @@ Vector2 updateSnapPos(Vector2 vector, Vector2 center, double angle) {
 class Lever1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GameWidget(game: Lever1Game());
+    return Scaffold(
+      appBar: AppBar(
+        leading: Image.asset('assets/images/logo.png'),
+        title: Text('Pocket Prayogshala'),
+      ),
+      body: GameWidget(game: Lever1Game()), //bodyColumn,
+    );
   }
 }
 
