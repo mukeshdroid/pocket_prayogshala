@@ -9,6 +9,7 @@ import 'modules/acid-base/acidbase.dart';
 import 'modules/lever2/lever2.dart';
 import 'buildanatom.dart';
 import 'myHoverCard.dart';
+import 'aboutUs.dart';
 
 class MyCustomScrollBehavior extends MaterialScrollBehavior {
   // Override behavior methods and getters like dragDevices
@@ -106,9 +107,9 @@ class _MyHomePageState extends State<MyHomePage> {
     var verticalScroll = ListView(
       padding: const EdgeInsets.all(8),
       children: [
-        //horizontalScrollCreate('भौतिकशास्त्र(Physics)', phyModules),
-        //horizontalScrollCreate('रसायन विज्ञान(Chemistry)', chemModules),
-        //horizontalScrollCreate('जीवविज्ञान(Biology)', bioModules),
+        // horizontalScrollCreate('भौतिकशास्त्र(Physics)', phyModules),
+        // horizontalScrollCreate('रसायन विज्ञान(Chemistry)', chemModules),
+        // horizontalScrollCreate('जीवविज्ञान(Biology)', bioModules),
         //horizontalScrollCreate('गणित(Maths)', mathModules),
       ],
     );
@@ -143,14 +144,37 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     var myAppBar = AppBar(
+      //ya bata paxadi loadig screen ma pheri najane
+      automaticallyImplyLeading: false,
+      actions: <Widget>[
+        Tooltip(
+          message: 'About Us',
+          child: Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AboutUsPage()));
+                },
+                child: Icon(
+                  Icons.info,
+                  size: AppBar().preferredSize.height * 0.6,
+                ),
+              )),
+        ),
+      ],
+
       title: InkWell(
         onTap: () {
           //already on first page so do nothing
         },
-        child: Image(
-          image: AssetImage('assets/images/logo.png'),
-          fit: BoxFit.contain,
-          height: AppBar().preferredSize.height,
+        child: Tooltip(
+          message: 'Home',
+          child: Image(
+            image: const AssetImage('assets/images/logo.png'),
+            fit: BoxFit.contain,
+            height: AppBar().preferredSize.height,
+          ),
         ),
       ),
       centerTitle: true,
