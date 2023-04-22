@@ -71,7 +71,7 @@ Widget horizontalScrollCreate(String title, List<List<String>> moduleList) {
                 ),
                 itemCount: moduleList.length,
                 itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.all(30.0),
+                    padding: EdgeInsets.all(30.0), //increased separation
                     child: MyHoverCard(
                         title: moduleList[index][0],
                         imagesrc: moduleList[index][1])),
