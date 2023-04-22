@@ -1,3 +1,4 @@
+import 'package:first_app_flutter/modules/lever1/lever1.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:flame/events.dart';
@@ -19,20 +20,25 @@ class SecondRoute extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            InkWell(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Lever1()));
+                },
+                child: Expanded(
+                  flex: 1,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 234, 228, 228)),
+                    child: Image.asset(
+                      'assets/images/lever2_bg.jpg',
+                    ),
+                  ),
+                )),
             Expanded(
-              flex: 1,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.5,
-                height: MediaQuery.of(context).size.height * 0.5,
-                decoration:
-                    BoxDecoration(color: Color.fromARGB(255, 234, 228, 228)),
-                child: Image.asset(
-                  'assets/images/lever2_bg.jpg',
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
+              flex: 2,
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.5,
                 height: MediaQuery.of(context).size.height * 0.5,
