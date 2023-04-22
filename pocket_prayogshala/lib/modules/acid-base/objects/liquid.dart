@@ -8,28 +8,29 @@ import 'package:flame/effects.dart';
 import '../acidbase.dart';
 import 'dart:math';
 
-class Liquid extends SpriteComponent with HasGameRef {
+class Liquid extends SpriteComponent with HasGameRef<AcidBaseCheckGame> {
   Liquid({super.size});
-  late double beakerSize;
+  // late double amountOfAcid = 0;
   late double amountOfAcid = 0;
-  late double amountOfBase = 10;
+  late double amountOfBase = 0;
+  late double width = 0.15 * gameRef.size[0];
   double volume = 0;
-  double totalVolume = 1.2;
-  String currentAgent = 'phenolphthalein';
+  double totalVolume = 500;
+  late String currentAgent = 'water';
   late Color currentColor;
   late double liquidOpacity;
   late ColorEffect colorEffect;
 
   // determines how much of a difference defines the complete change in color
   late double threshhold = 0.2;
-  double minOpacity = 0.2;
+  double minOpacity = 0.3;
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    beakerSize = 180 * 1.3;
+
     sprite = await Sprite.load('back.jpg');
-    spritePrep();
+    // spritePrep();
     updateColor();
     colorEffect = ColorEffect(
         currentColor, const Offset(0.0, 0.9), EffectController(duration: .0));
@@ -41,23 +42,17 @@ class Liquid extends SpriteComponent with HasGameRef {
     spriteUpdate();
 
     // test
-    if (volume < 1.0) {
-      volume += 0.05 * dt;
+    if (volume < totalVolume) {
+      volume += 50 * dt;
     }
   }
 
   // setting up sprite placements
-  void spritePrep() {
-    // Needs to  be run once to set up placement of luquid
-    anchor = Anchor.bottomCenter;
-    size = Vector2(beakerSize - 15, (volume / totalVolume) * beakerSize);
-    y = gameRef.size[1] / 2 + 140 + beakerSize / 2;
-    x = gameRef.size[0] / 2;
-    priority = 3;
-  }
-
+  // void spritePrep() {
+  //   // Needs to  be run once to set up placement of luquid
+  // }
   void spriteUpdate() {
-    size = Vector2(beakerSize - 15, (volume / totalVolume) * beakerSize);
+    size = Vector2(width, (volume / totalVolume) * width);
   }
 
   updateColor() {

@@ -7,6 +7,7 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/rendering.dart';
+import 'dart:async';
 
 Vector2 updateSnapPos(Vector2 vector, Vector2 center, double angle) {
   Vector2 temp1 = vector - center;

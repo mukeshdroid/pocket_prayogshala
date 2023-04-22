@@ -21,24 +21,36 @@ class Pipett extends SpriteComponent
   double maxVolume = .3;
   static double snapSeperation = 180;
   Vector2 snapPosition = Vector2.zero();
-
-  List releaseSnappablePosition = [Vector2(400, 300)];
+  late Sprite spritefull;
+  late Sprite spriteempty;
+  List releaseSnappablePosition = [];
   List fillSnappablePosition = [];
+  // late Vector2 tempSize;
 
   @override
   void onLoad() async {
     super.onLoad();
+    spritefull = await Sprite.load('pipettefull.png');
+    spriteempty = await Sprite.load('pipetteempty.png');
     final screenWidth = gameRef.size[0];
     final screenHeight = gameRef.size[1];
-    fillSnappablePosition.add(
-        Vector2(screenWidth / 2 - screenWidth / 4, screenHeight / 2 + 185));
-    fillSnappablePosition.add(
-        Vector2(screenWidth / 2 + screenWidth / 4, screenHeight / 2 + 185));
+    // initialPosition = Vector2(size.x, size.y);
+    releaseSnappablePosition.add(Vector2(screenWidth * .5, screenHeight * .65));
+    fillSnappablePosition.add(Vector2(screenWidth * .20, screenHeight * .75));
+    fillSnappablePosition.add(Vector2(screenWidth * .80, screenHeight * .75));
+    print(fillSnappablePosition);
   }
 
   @override
   void update(dt) {
     super.update(dt);
+    if (full) {
+      sprite = spritefull;
+      size = Vector2(gameRef.size[1] / 20, gameRef.size[1] / 20 * 5.75);
+    } else {
+      sprite = spriteempty;
+      size = Vector2(gameRef.size[1] / 20, gameRef.size[1] / 20 * 5.75);
+    }
   }
 
   @override
@@ -80,6 +92,7 @@ class Pipett extends SpriteComponent
   fill() {
     // fills the pipette with the given reagent
     print('pipette filled at ');
+
     full = true;
   }
 
@@ -87,8 +100,11 @@ class Pipett extends SpriteComponent
     // functions that dispenses the substance in pipett
     // if the pipett is set at the required position and
     // the pipett is not empty.
-    print('pipette released');
-    full = false;
+    if (full) {
+      gameRef.liquid.currentAgent = reagent;
+      print('pipette released');
+      full = false;
+    }
   }
 
   bool checkForSnapFill() {
@@ -116,7 +132,12 @@ class Pipett extends SpriteComponent
 
     if (minDistance < snapSeperation) {
       position = fillSnappablePosition[minIndex];
-      // print(position);
+      if (minIndex == 0) {
+        reagent = "phenolphthalein";
+      } else {
+        reagent = "methylOrange";
+      }
+      print(reagent);
       return true;
     } else {
       //go back to original location
