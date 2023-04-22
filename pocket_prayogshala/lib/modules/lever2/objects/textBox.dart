@@ -2,7 +2,7 @@ import '../lever2.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
-import 'package:pocket_prayogshala/mytextStyle.dart';
+import 'package:pocket_prayogshala/mytextStyleFlame.dart';
 
 class MyTextBox extends TextBoxComponent {
   MyTextBox(

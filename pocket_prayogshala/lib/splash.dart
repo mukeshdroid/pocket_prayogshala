@@ -1,3 +1,5 @@
+//import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +12,8 @@ import 'modules/acid-base/acidbase.dart';
 import 'modules/lever2/lever2.dart';
 import 'buildanatom.dart';
 import 'myHoverCard.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 class MyCustomScrollBehavior extends MaterialScrollBehavior {
   // Override behavior methods and getters like dragDevices
@@ -25,6 +29,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // force landscape orientation
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+
+    //force fullscreen
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
@@ -40,51 +53,60 @@ class MyApp extends StatelessWidget {
 }
 
 class MySplash extends StatelessWidget {
-  var logoImage = Expanded(
-    flex: 6,
-    child: Center(
-      child: Container(
-        child: Image.asset(
-          'assets/images/logo.png',
-          fit: BoxFit.contain,
-        ),
-      ),
-    ),
-  );
-
-  Widget supportText = const Expanded(
-    flex: 2,
-    child: Text(
-      //"नेपाल सरकार शिक्षा, विज्ञान तथा प्रविधि मन्त्रालयबाट सहयोग प्राप्त।  ",
-      "usiky ljdkj f'k{kk] foKku rFkk çfof/k eU=ky;ckV lg;ksx çkIrA ",
-      style: TextStyle(
-        fontFamily: 'krutidevbold',
-        fontSize: 40,
-        color: Colors.black,
-        //decoration: TextDecoration.underline,
-        //decorationColor: Colors.red,
-        //decorationStyle: TextDecorationStyle.solid,
-      ),
-    ),
-  );
-
-  Widget pressText = const Expanded(
-    flex: 1,
-    child: Text(
-      //"agadi badhnako lagi click garnus ",
-      "vxkMh tkudks ykfx LØhuek fDyd xuqZgksLA ",
-      style: TextStyle(
-        fontFamily: 'krutidev',
-        fontSize: 30,
-        color: Colors.black,
-        //decoration: TextDecoration.underline,
-        //decorationColor: Colors.red,
-        //decorationStyle: TextDecorationStyle.solid,
-      ),
-    ),
-  );
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    double unitWidthValue = MediaQuery.of(context).size.width * 0.01;
+
+    var logoImage = Expanded(
+      flex: 6,
+      child: Center(
+        child: Container(
+          child: Image.asset(
+            'assets/images/logo.png',
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
+    );
+
+    Widget supportText = Expanded(
+      flex: 2,
+      child: Text(
+        //"नेपाल सरकार शिक्षा, विज्ञान तथा प्रविधि मन्त्रालयबाट सहयोग प्राप्त।  ",
+        "usiky ljdkj f'k{kk] foKku rFkk çfof/k eU=ky;ckV lg;ksx çkIrA ",
+        style: TextStyle(
+          fontFamily: 'krutidevbold',
+          fontSize: 5.2 *
+              ((unitWidthValue > unitHeightValue)
+                  ? unitHeightValue
+                  : unitWidthValue),
+          color: Color.fromRGBO(8, 6, 6, 1),
+          //decoration: TextDecoration.underline,
+          //decorationColor: Colors.red,
+          //decorationStyle: TextDecorationStyle.solid,
+        ),
+      ),
+    );
+
+    Widget pressText = Expanded(
+      flex: 1,
+      child: Text(
+        //"agadi badhnako lagi click garnus ",
+        "vxkMh tkudks ykfx LØhuek fDyd xuqZgksLA ",
+        style: TextStyle(
+          fontFamily: 'krutidev',
+          fontSize: 3.5 *
+              ((unitWidthValue > unitHeightValue)
+                  ? unitHeightValue
+                  : unitWidthValue),
+          color: Colors.black,
+          //decoration: TextDecoration.underline,
+          //decorationColor: Colors.red,
+          //decorationStyle: TextDecorationStyle.solid,
+        ),
+      ),
+    );
     return Scaffold(
         body: InkWell(
       onTap: () {

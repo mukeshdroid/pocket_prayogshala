@@ -5,8 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
-//import 'splash.dart';
-import 'ui_old.dart';
+import 'splash.dart';
 
 void main() {
   runApp(MyApp());
