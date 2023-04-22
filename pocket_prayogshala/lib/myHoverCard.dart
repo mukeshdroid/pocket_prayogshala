@@ -22,43 +22,41 @@ class _MyHoverCardState extends State<MyHoverCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: AnimatedContainer(
-          height: (isHover) ? 400 : 300,
-          width: (isHover) ? 400 : 300,
-          duration: Duration(milliseconds: 200),
-          padding: EdgeInsets.only(
-              top: (isHover) ? 25 : 30.0, bottom: !(isHover) ? 25 : 30),
-          child: Container(
-            height: 150,
-            color: Colors.blue,
-            child: InkWell(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SecondRoute()));
-              },
-              child: Column(
-                children: <Widget>[
-                  Image.asset(
-                    'assets/images/${widget.imagesrc}',
-                  ),
-                  Text(
-                    widget.title,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              onHover: (val) {
-                print("Val--->{}$val");
-                setState(() {
-                  isHover = val;
-                });
-              },
+    return Center(
+      child: AnimatedContainer(
+        height: (isHover) ? 400 : 300,
+        width: (isHover) ? 400 : 300,
+        duration: const Duration(milliseconds: 200),
+        padding: EdgeInsets.only(
+            top: (isHover) ? 25 : 30.0, bottom: !(isHover) ? 25 : 30),
+        child: Container(
+          height: 150,
+          color: Colors.blue,
+          child: InkWell(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SecondRoute()));
+            },
+            child: Column(
+              children: <Widget>[
+                Image.asset(
+                  'assets/images/${widget.imagesrc}',
+                ),
+                Text(
+                  widget.title,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
-            /*val--->true when user brings in mouse
-           val---> false when brings out his mouse*/
+            onHover: (val) {
+              // print("Val--->{}$val");
+              setState(() {
+                isHover = val;
+              });
+            },
           ),
+          /*val--->true when user brings in mouse
+           val---> false when brings out his mouse*/
         ),
       ),
     );

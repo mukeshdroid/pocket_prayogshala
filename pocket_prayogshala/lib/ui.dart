@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'wordgen.dart';
@@ -156,7 +155,12 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
 
-    return Scaffold(body: verticalScroll //bodyColumn,
+    return Scaffold(
+        appBar: AppBar(
+          leading: Image.asset('assets/images/logo.png'),
+          title: Text('Pocket Prayogshala'),
+        ),
+        body: verticalScroll //bodyColumn,
         );
   }
 }

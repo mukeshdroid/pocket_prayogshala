@@ -9,7 +9,7 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/rendering.dart';
 
-class SecondRoute extends StatelessWidget {
+class AcidBasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var moduleThumbnail = InkWell(
