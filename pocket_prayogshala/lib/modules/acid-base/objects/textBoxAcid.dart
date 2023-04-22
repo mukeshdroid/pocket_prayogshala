@@ -1,3 +1,4 @@
+import 'package:first_app_flutter/modules/acid-base/acidbase.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
@@ -17,41 +18,54 @@ final _shaded = TextPaint(
   style: TextStyle(
     color: Color.fromARGB(255, 0, 0, 0),
     fontSize: 40.0,
-    shadows: const [
-      Shadow(
-          color: Color.fromARGB(255, 244, 250, 65),
-          offset: Offset(2, 2),
-          blurRadius: 2),
-      Shadow(
-          color: Color.fromARGB(255, 45, 6, 145),
-          offset: Offset(4, 4),
-          blurRadius: 4),
-    ],
   ),
 );
 
-class MyTextBox extends TextBoxComponent {
+class MyTextBox extends TextBoxComponent with HasGameRef<AcidBaseCheckGame> {
+  // double? maximumwidth;
+  // double? timePerChar;
+  // double? margins;
+  double? fontS;
+  int type = 0;
   MyTextBox(
     String text, {
     super.align,
     super.size,
     double? timePerChar,
     double? margins,
+    double? maximumwidth,
+    double? fontS,
   }) : super(
           text: text,
-          textRenderer: _shaded,
+          textRenderer:
+              TextPaint(style: _regularTextStyle.copyWith(fontSize: fontS)),
           boxConfig: TextBoxConfig(
-            maxWidth: 400,
+            maxWidth: maximumwidth ?? 700,
             timePerChar: timePerChar ?? 0.00,
-            growingBox: true,
+            growingBox: false,
             margins: EdgeInsets.all(margins ?? 25),
           ),
         );
 
   @override
+  void update(double dt) {
+    // TODO: implement update
+    super.update(dt);
+  }
+
+  @override
   void render(Canvas canvas) {
-    final rect = Rect.fromLTWH(0, 0, width, height);
-    canvas.drawRect(rect, Paint()..color = Colors.white10);
+    if (type == 1) {
+      // final rect = Rect.fromLTWH(0, 0, width, height);
+      // canvas.drawRect(rect, Paint()..color = Colors.white10);
+    }
     super.render(canvas);
+  }
+
+  @override
+  Future<void> onLoad() {
+    // TODO: implement onLoad
+    if (type == 1) {}
+    return super.onLoad();
   }
 }

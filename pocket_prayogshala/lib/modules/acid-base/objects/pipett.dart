@@ -36,9 +36,9 @@ class Pipett extends SpriteComponent
     final screenHeight = gameRef.size[1];
     // initialPosition = Vector2(size.x, size.y);
     releaseSnappablePosition.add(Vector2(screenWidth * .5, screenHeight * .65));
-    fillSnappablePosition.add(Vector2(screenWidth * .20, screenHeight * .75));
-    fillSnappablePosition.add(Vector2(screenWidth * .80, screenHeight * .75));
-    print(fillSnappablePosition);
+    fillSnappablePosition.add(Vector2(screenWidth * .20, screenHeight * .7));
+    fillSnappablePosition.add(Vector2(screenWidth * .80, screenHeight * .7));
+    // print(fillSnappablePosition);
   }
 
   @override
@@ -67,7 +67,7 @@ class Pipett extends SpriteComponent
   @override
   void onDragEnd(DragEndEvent event) {
     _isDragged = false;
-    if (!full) {
+    if (!full && gameRef.liquid.currentAgent == 'water') {
       if (checkForSnapFill()) {
         // start filling animation and wait until animation ends
         // move to initial position with filled pipette
