@@ -1,8 +1,8 @@
 import 'dart:math';
-import 'package:first_app_flutter/modules/acid-base/objects/liquid.dart';
-import 'package:first_app_flutter/modules/acid-base/objects/pipett.dart';
-import 'package:first_app_flutter/modules/acid-base/objects/reagent.dart';
-import 'package:first_app_flutter/modules/acid-base/objects/tapbutton.dart';
+import 'package:pocket_prayogshala/modules/acid-base/objects/liquid.dart';
+import 'package:pocket_prayogshala/modules/acid-base/objects/pipett.dart';
+import 'package:pocket_prayogshala/modules/acid-base/objects/reagent.dart';
+import 'package:pocket_prayogshala/modules/acid-base/objects/tapbutton.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ import 'objects/beaker.dart';
 import 'objects/reagent.dart';
 import 'objects/textBoxAcid.dart';
 
-class acidBasePage extends StatelessWidget {
+class acidBase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GameWidget(game: AcidBaseCheckGame());
