@@ -53,9 +53,21 @@ class _MyHoverCardState extends State<MyHoverCard> {
           width: (isHover) ? 400 : 300,
           duration: Duration(milliseconds: 200),
           padding: EdgeInsets.only(
-              top: (isHover) ? 25 : 30.0, bottom: !(isHover) ? 25 : 30),
+              top: (isHover) ? 10 : 20.0, bottom: !(isHover) ? 10 : 20),
           child: Container(
-            color: Colors.blue,
+            height: 150,
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(20), bottom: Radius.circular(20)),
+              boxShadow: [
+                BoxShadow(
+                  color: Color.fromARGB(255, 18, 16, 16),
+                  offset: Offset(5, 10),
+                  blurRadius: 30,
+                ),
+              ],
+            ),
             child: InkWell(
               onTap: () {
                 Navigator.push(context,
