@@ -19,25 +19,6 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
-      child: MaterialApp(
-        title: 'Namer App',
-        theme: ThemeData(
-            useMaterial3: true,
-            colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.amber)),
-        home: MyHomePage(),
-        scrollBehavior: MyCustomScrollBehavior(),
-      ),
-    );
-  }
-}
-
 Widget box(String title, Color backgroundcolor) {
   return Container(
       margin: EdgeInsets.all(10),
@@ -125,9 +106,9 @@ class _MyHomePageState extends State<MyHomePage> {
     var verticalScroll = ListView(
       padding: const EdgeInsets.all(8),
       children: [
-        horizontalScrollCreate('भौतिकशास्त्र(Physics)', phyModules),
-        horizontalScrollCreate('रसायन विज्ञान(Chemistry)', chemModules),
-        horizontalScrollCreate('जीवविज्ञान(Biology)', bioModules),
+        //horizontalScrollCreate('भौतिकशास्त्र(Physics)', phyModules),
+        //horizontalScrollCreate('रसायन विज्ञान(Chemistry)', chemModules),
+        //horizontalScrollCreate('जीवविज्ञान(Biology)', bioModules),
         //horizontalScrollCreate('गणित(Maths)', mathModules),
       ],
     );
@@ -161,16 +142,21 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
 
-    return Scaffold(
-        appBar: AppBar(
-          title: Image(
-            image: AssetImage('assets/images/logo.png'),
-            fit: BoxFit.contain,
-            height: AppBar().preferredSize.height,
-          ),
-          centerTitle: true,
+    var myAppBar = AppBar(
+      title: InkWell(
+        onTap: () {
+          //already on first page so do nothing
+        },
+        child: Image(
+          image: AssetImage('assets/images/logo.png'),
+          fit: BoxFit.contain,
+          height: AppBar().preferredSize.height,
         ),
-        body: verticalScroll //bodyColumn,
+      ),
+      centerTitle: true,
+    );
+
+    return Scaffold(appBar: myAppBar, body: verticalScroll //,bodyColumn,
         );
   }
 }

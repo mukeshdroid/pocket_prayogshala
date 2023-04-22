@@ -1,6 +1,6 @@
 import 'dart:math';
-import 'package:first_app_flutter/modules/acid-base/objects/liquid.dart';
-import 'package:first_app_flutter/modules/acid-base/objects/pipett.dart';
+import 'package:pocket_prayogshala/modules/acid-base/objects/liquid.dart';
+import 'package:pocket_prayogshala/modules/acid-base/objects/pipett.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';

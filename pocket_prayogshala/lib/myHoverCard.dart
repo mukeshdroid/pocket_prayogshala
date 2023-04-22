@@ -1,5 +1,5 @@
-import 'package:first_app_flutter/modules/lever1/lever1.dart';
-import 'package:first_app_flutter/ui.dart';
+import 'package:pocket_prayogshala/modules/lever1/lever1.dart';
+import 'package:pocket_prayogshala/ui.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
