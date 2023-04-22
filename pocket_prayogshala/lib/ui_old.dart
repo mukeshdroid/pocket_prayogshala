@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'wordgen.dart';
 import 'physics.dart';
-import 'lever1.dart';
+import 'modules/lever1/lever1.dart';
 import 'modules/acid-base/acidbase.dart';
 import 'modules/lever2/lever2.dart';
 import 'buildanatom.dart';
@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = Lever2();
         break;
       case 5:
-        page = acidBasePage();
+        page = acidBase();
         break;
       case 6:
         page = BuildAtom();
@@ -119,3 +119,57 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 }
+
+// const homeNavBtn = NavigationRailDestination(
+//   icon: Icon(Icons.home),
+//   label: Text('Home'),
+// );
+
+// const favNavBtn = NavigationRailDestination(
+//   icon: Icon(Icons.favorite),
+//   label: Text('Fav'),
+// );
+
+// const physicsNavBtn = NavigationRailDestination(
+//   icon: Icon(Icons.gamepad),
+//   label: Text('physics'),
+// );
+
+// const lever1NavBtn = NavigationRailDestination(
+//   icon: Icon(Icons.gamepad),
+//   label: Text('Lever1'),
+// );
+
+// const lever2NavBtn = NavigationRailDestination(
+//   icon: Icon(Icons.gamepad),
+//   label: Text('Lever2'),
+// );
+
+// const acidbaseNavBtn = NavigationRailDestination(
+//   icon: Icon(Icons.gamepad),
+//   label: Text('Acid or Base'),
+// );
+
+// const atomNavBtn = NavigationRailDestination(
+//   icon: Icon(Icons.gamepad),
+//   label: Text('Building An Atom'),
+// );
+
+// var navRail = NavigationRail(
+//   extended: Constraints.maxWidth >= 600,
+//   destinations: [
+//     homeNavBtn,
+//     favNavBtn,
+//     physicsNavBtn,
+//     lever1NavBtn,
+//     lever2NavBtn,
+//     acidbaseNavBtn,
+//     atomNavBtn,
+//   ],
+//   selectedIndex: selectedIndex,
+//   onDestinationSelected: (value) {
+//     setState(() {
+//       selectedIndex = value;
+//     });
+//   },
+// );

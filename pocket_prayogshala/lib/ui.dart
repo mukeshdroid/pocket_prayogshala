@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'wordgen.dart';
 import 'physics.dart';
-import 'lever1.dart';
+import 'modules/lever1/lever1.dart';
 import 'modules/acid-base/acidbase.dart';
 import 'modules/lever2/lever2.dart';
 import 'buildanatom.dart';
@@ -44,21 +44,26 @@ Widget box(String title, Color backgroundcolor) {
       width: 280,
       color: backgroundcolor,
       alignment: Alignment.center,
-      child: Text(title, style: TextStyle(color: Colors.white, fontSize: 20)));
+      child: Text(title,
+          style: TextStyle(
+              color: Colors.white, fontSize: 50, fontWeight: FontWeight.bold)));
 }
 
-Widget horizontalScrollCreate(String title, List<String> moduleList) {
+Widget horizontalScrollCreate(String title, List<List<String>> moduleList) {
   return Container(
       padding: EdgeInsets.all(20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-              //height: 50,
+              height: 40,
               color: Colors.amber[100],
-              child: Center(child: Text(title))),
+              child: Center(
+                  child: Text(title,
+                      style: TextStyle(
+                          fontSize: 30, fontWeight: FontWeight.bold)))),
           Container(
-              height: 400,
+              height: 250,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 separatorBuilder: (context, index) => Divider(
@@ -66,8 +71,10 @@ Widget horizontalScrollCreate(String title, List<String> moduleList) {
                 ),
                 itemCount: moduleList.length,
                 itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: MyHoverCard(title: moduleList[index])),
+                    padding: EdgeInsets.all(30.0), //increased separation
+                    child: MyHoverCard(
+                        title: moduleList[index][0],
+                        imagesrc: moduleList[index][1])),
               ))
         ],
       ));
@@ -89,31 +96,30 @@ class _MyHomePageState extends State<MyHomePage> {
     //   ],
     // );
 
-    List<String> phyModules = [
-      "चाकल-चुकुल(see-saw)",
-      "सरौतो(Nutcracker)",
-      "गति र प्रवेग(Velocity and Acceleration)",
-      "वायुमण्डलीय दबाव(Atmospheric Pressure)",
-      "प्रकाश को अपवर्तन(Refraction of Light)",
-      "गतिज ऊर्जा(Kinetic Energy)"
+    List<List<String>> phyModules = [
+      ["चाकल-चुकुल(see-saw)", 'seesaw.jpg'],
+      ["सरौतो(Nutcracker)", 'nutcracker.jpeg'],
+      ["गति र प्रवेग(Velocity and Acceleration)", 'Velocity.jpg'],
+      ["वायुमण्डलीय दबाव(Atmospheric Pressure)", 'pressure.jpg'],
+      ["प्रकाश को अपवर्तन(Refraction of Light)", 'Refraction-of-Light.jpg'],
+      ["गतिज ऊर्जा(Kinetic Energy)", 'kinetic.jpg']
     ];
 
-    List<String> chemModules = [
-      "अम्ल र क्षार(Acid and Base)",
-      "आंशिक आसवन(Fractional Distillation)",
-      "पर्मणुमा इलेक्ट्रोनको रचना(Electronic Configuration of an atom)",
-      "रासायनिक प्रतिक्रिया(Chemical Reactions)",
-      "पानीको कठोरता(Hardness of Water)",
-      "cvxcv"
+    List<List<String>> chemModules = [
+      ["अम्ल र क्षार(Acid and Base)", 'acid.jpg'],
+      ["आंशिक आसवन(Fractional Distillation)", 'distillation.jpg'],
+      ["पर्मणुमा इलेक्ट्रोनको रचना(Electronic Configuration)", 'atom.jpg'],
+      ["रासायनिक प्रतिक्रिया(Chemical Reactions)", 'chemical.jpg'],
+      ["पानीको कठोरता(Hardness of Water)", 'water.png']
     ];
 
     //List<String> mathModules = [];
 
-    List<String> bioModules = [
-      "बीजको फैलावट(Dispersal of seed)",
-      "बीजको अंकुरण(Germination of seed)",
-      "फूल फुल्ने बिरुवाको जीवन चक्र(Life Cycle of a Flower)",
-      "प्रकाश संश्लेषण(Photosynthesis)",
+    List<List<String>> bioModules = [
+      ["बीजको फैलावट(Dispersal of seed)", 'seed.jpeg'],
+      ["बीजको अंकुरण(Germination of seed)", 'seed1.jpeg'],
+      ["फूल फुल्ने बिरुवाको जीवन चक्र(Life Cycle of Flower)", 'flower.jpg'],
+      ["प्रकाश संश्लेषण(Photosynthesis)", 'photo.jpg']
     ];
 
     var verticalScroll = ListView(
@@ -155,7 +161,16 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
 
-    return Scaffold(body: verticalScroll //bodyColumn,
+    return Scaffold(
+        appBar: AppBar(
+          title: Image(
+            image: AssetImage('assets/images/logo.png'),
+            fit: BoxFit.contain,
+            height: AppBar().preferredSize.height,
+          ),
+          centerTitle: true,
+        ),
+        body: verticalScroll //bodyColumn,
         );
   }
 }
