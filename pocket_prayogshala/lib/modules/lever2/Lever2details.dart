@@ -1,4 +1,4 @@
-import 'package:pocket_prayogshala/modules/lever1/lever1.dart';
+import 'package:pocket_prayogshala/modules/lever2/lever2.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:flame/events.dart';
@@ -8,6 +8,8 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/rendering.dart';
+import '../../aboutUs.dart';
+import '../../mycolors.dart';
 
 class Lever2Page extends StatelessWidget {
   @override
@@ -15,7 +17,7 @@ class Lever2Page extends StatelessWidget {
     var moduleThumbnail = InkWell(
         onTap: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Lever1()));
+              context, MaterialPageRoute(builder: (context) => Lever2()));
         },
         child: Expanded(
           flex: 1,
@@ -50,12 +52,24 @@ class Lever2Page extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(
-            child: Image.asset('assets/images/logo.png'),
-            onTap: () {
-              Navigator.of(context).pop();
-            }),
-        title: Text('Pocket Prayogshala'),
+        automaticallyImplyLeading: true,
+        backgroundColor: appBarBg,
+        elevation: 8,
+        shadowColor: appBarShadow,
+        title: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Tooltip(
+            message: 'Home',
+            child: Image(
+              image: const AssetImage('assets/images/logo.png'),
+              fit: BoxFit.contain,
+              height: AppBar().preferredSize.height,
+            ),
+          ),
+        ),
+        centerTitle: true,
       ),
       body: Center(
         child: Column(
