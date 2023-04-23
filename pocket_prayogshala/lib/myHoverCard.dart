@@ -3,15 +3,21 @@ import 'package:pocket_prayogshala/ui.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'SecondRoute.dart';
+import 'ComingSoon.dart';
 
 class MyHoverCard extends StatefulWidget {
-  MyHoverCard({super.key, this.title = "default", required this.imagesrc});
+  MyHoverCard(
+      {super.key,
+      this.title = "default",
+      required this.imagesrc,
+      this.isImplemented = false,
+      required this.redirect});
 
-  String title = 'hello';
+  String title;
   String textBanner = 'Comming Soon! Stay Tuned.';
   String imagesrc = '';
-  bool isImplemented = false;
+  bool isImplemented;
+  dynamic redirect;
 
   @override
   State<MyHoverCard> createState() => _MyHoverCardState();
@@ -27,11 +33,11 @@ class _MyHoverCardState extends State<MyHoverCard> {
   Widget build(BuildContext context) {
     var imageStack = Stack(
       children: <Widget>[
-        Expanded(
-            child: Image.asset(
-          'assets/images/${widget.imagesrc}',
-          fit: BoxFit.cover,
-        )),
+        //Expanded(
+        //   child: Image.asset(
+        //'assets/images/${widget.imagesrc}',
+        //fit: BoxFit.cover,
+        // ),
         Positioned(
             child: Text(
           (isHover && !widget.isImplemented) ? widget.textBanner : '',
@@ -41,7 +47,7 @@ class _MyHoverCardState extends State<MyHoverCard> {
               fontWeight: FontWeight.w900,
               fontStyle: FontStyle.italic,
               fontFamily: 'Open Sans',
-              fontSize: 40),
+              fontSize: 30),
         )),
       ],
     );
@@ -71,7 +77,7 @@ class _MyHoverCardState extends State<MyHoverCard> {
             child: InkWell(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SecondRoute()));
+                    MaterialPageRoute(builder: (context) => widget.redirect));
               },
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -84,9 +90,9 @@ class _MyHoverCardState extends State<MyHoverCard> {
                 ],
               ),
               onHover: (val) {
-                print("Val--->{}$val");
                 setState(() {
                   isHover = val;
+                  //print(widget.isImplemented);
                 });
               },
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:pocket_prayogshala/mycolors.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'wordgen.dart';
@@ -9,6 +10,11 @@ import 'modules/acid-base/acidbase.dart';
 import 'modules/lever2/lever2.dart';
 import 'buildanatom.dart';
 import 'myHoverCard.dart';
+import 'aboutUs.dart';
+import 'ComingSoon.dart';
+import 'modules/acid-base/AcidBasedetails.dart';
+import 'modules/lever1/Lever1details.dart';
+import 'modules/lever2/Lever2details.dart';
 
 class MyCustomScrollBehavior extends MaterialScrollBehavior {
   // Override behavior methods and getters like dragDevices
@@ -30,7 +36,7 @@ Widget box(String title, Color backgroundcolor) {
               color: Colors.white, fontSize: 50, fontWeight: FontWeight.bold)));
 }
 
-Widget horizontalScrollCreate(String title, List<List<String>> moduleList) {
+Widget horizontalScrollCreate(String title, var moduleList) {
   return Container(
       padding: EdgeInsets.all(20),
       child: Column(
@@ -52,10 +58,14 @@ Widget horizontalScrollCreate(String title, List<List<String>> moduleList) {
                 ),
                 itemCount: moduleList.length,
                 itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.all(30.0), //increased separation
-                    child: MyHoverCard(
-                        title: moduleList[index][0],
-                        imagesrc: moduleList[index][1])),
+                  padding: EdgeInsets.all(30.0), //increased separation
+                  child: MyHoverCard(
+                    title: moduleList[index][0],
+                    imagesrc: moduleList[index][1],
+                    isImplemented: moduleList[index][2],
+                    redirect: moduleList[index][3],
+                  ),
+                ),
               ))
         ],
       ));
@@ -77,38 +87,76 @@ class _MyHomePageState extends State<MyHomePage> {
     //   ],
     // );
 
-    List<List<String>> phyModules = [
-      ["चाकल-चुकुल(see-saw)", 'seesaw.jpg'],
-      ["सरौतो(Nutcracker)", 'nutcracker.jpeg'],
-      ["गति र प्रवेग(Velocity and Acceleration)", 'Velocity.jpg'],
-      ["वायुमण्डलीय दबाव(Atmospheric Pressure)", 'pressure.jpg'],
-      ["प्रकाश को अपवर्तन(Refraction of Light)", 'Refraction-of-Light.jpg'],
-      ["गतिज ऊर्जा(Kinetic Energy)", 'kinetic.jpg']
+// module[0] = name of module
+// module[1] = image file location
+// module[2] = 1 if implemented 0 otherwise
+    var phyModules = [
+      ["चाकल-चुकुल(see-saw)", 'seesaw.jpg', true, Lever1Page()],
+      ["सरौतो(Nutcracker)", 'nutcracker.jpeg', true, Lever2Page()],
+      [
+        "गति र प्रवेग(Velocity and Acceleration)",
+        'Velocity.jpg',
+        false,
+        SecondRoute()
+      ],
+      [
+        "वायुमण्डलीय दबाव(Atmospheric Pressure)",
+        'pressure.jpg',
+        false,
+        SecondRoute()
+      ],
+      [
+        "प्रकाश को अपवर्तन(Refraction of Light)",
+        'Refraction-of-Light.jpg',
+        false,
+        SecondRoute()
+      ],
+      ["गतिज ऊर्जा(Kinetic Energy)", 'kinetic.jpg', false, SecondRoute()]
     ];
 
-    List<List<String>> chemModules = [
-      ["अम्ल र क्षार(Acid and Base)", 'acid.jpg'],
-      ["आंशिक आसवन(Fractional Distillation)", 'distillation.jpg'],
-      ["पर्मणुमा इलेक्ट्रोनको रचना(Electronic Configuration)", 'atom.jpg'],
-      ["रासायनिक प्रतिक्रिया(Chemical Reactions)", 'chemical.jpg'],
-      ["पानीको कठोरता(Hardness of Water)", 'water.png']
+    var chemModules = [
+      ["अम्ल र क्षार(Acid and Base)", 'acid.jpg', true, AcidBasePage()],
+      [
+        "आंशिक आसवन(Fractional Distillation)",
+        'distillation.jpg',
+        false,
+        SecondRoute()
+      ],
+      [
+        "पर्मणुमा इलेक्ट्रोनको रचना(Electronic Configuration)",
+        'atom.jpg',
+        false,
+        SecondRoute()
+      ],
+      [
+        "रासायनिक प्रतिक्रिया(Chemical Reactions)",
+        'chemical.jpg',
+        false,
+        SecondRoute()
+      ],
+      ["पानीको कठोरता(Hardness of Water)", 'water.png', false, SecondRoute()]
     ];
 
     //List<String> mathModules = [];
 
-    List<List<String>> bioModules = [
-      ["बीजको फैलावट(Dispersal of seed)", 'seed.jpeg'],
-      ["बीजको अंकुरण(Germination of seed)", 'seed1.jpeg'],
-      ["फूल फुल्ने बिरुवाको जीवन चक्र(Life Cycle of Flower)", 'flower.jpg'],
-      ["प्रकाश संश्लेषण(Photosynthesis)", 'photo.jpg']
+    var bioModules = [
+      ["बीजको फैलावट(Dispersal of seed)", 'seed.jpeg', false, SecondRoute()],
+      ["बीजको अंकुरण(Germination of seed)", 'seed1.jpeg', false, SecondRoute()],
+      [
+        "फूल फुल्ने बिरुवाको जीवन चक्र(Life Cycle of Flower)",
+        'flower.jpg',
+        false,
+        SecondRoute()
+      ],
+      ["प्रकाश संश्लेषण(Photosynthesis)", 'photo.jpg', false, SecondRoute()]
     ];
 
     var verticalScroll = ListView(
       padding: const EdgeInsets.all(8),
       children: [
-        //horizontalScrollCreate('भौतिकशास्त्र(Physics)', phyModules),
-        //horizontalScrollCreate('रसायन विज्ञान(Chemistry)', chemModules),
-        //horizontalScrollCreate('जीवविज्ञान(Biology)', bioModules),
+        horizontalScrollCreate('भौतिकशास्त्र(Physics)', phyModules),
+        horizontalScrollCreate('रसायन विज्ञान(Chemistry)', chemModules),
+        horizontalScrollCreate('जीवविज्ञान(Biology)', bioModules),
         //horizontalScrollCreate('गणित(Maths)', mathModules),
       ],
     );
@@ -143,20 +191,49 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     var myAppBar = AppBar(
+      //ya bata paxadi loadig screen ma pheri najane
+      automaticallyImplyLeading: false,
+      backgroundColor: appBarBg,
+      elevation: 8,
+      shadowColor: appBarShadow,
+
+      actions: <Widget>[
+        Tooltip(
+          message: 'About Us',
+          child: Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AboutUsPage()));
+                },
+                child: Icon(
+                  Icons.info,
+                  size: AppBar().preferredSize.height * 0.6,
+                ),
+              )),
+        ),
+      ],
+
       title: InkWell(
         onTap: () {
           //already on first page so do nothing
         },
-        child: Image(
-          image: AssetImage('assets/images/logo.png'),
-          fit: BoxFit.contain,
-          height: AppBar().preferredSize.height,
+        child: Tooltip(
+          message: 'Home',
+          child: Image(
+            image: const AssetImage('assets/images/logo.png'),
+            fit: BoxFit.contain,
+            height: AppBar().preferredSize.height,
+          ),
         ),
       ),
       centerTitle: true,
     );
 
-    return Scaffold(appBar: myAppBar, body: verticalScroll //,bodyColumn,
-        );
+    return Scaffold(
+      appBar: myAppBar,
+      body: verticalScroll, //,bodyColumn,
+    );
   }
 }
