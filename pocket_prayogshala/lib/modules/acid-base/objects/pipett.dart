@@ -91,7 +91,7 @@ class Pipett extends SpriteComponent
 
   fill() {
     // fills the pipette with the given reagent
-    print('pipette filled at ');
+    // print('pipette filled at ');
 
     full = true;
   }
@@ -102,7 +102,7 @@ class Pipett extends SpriteComponent
     // the pipett is not empty.
     if (full) {
       gameRef.liquid.currentAgent = reagent;
-      print('pipette released');
+      // print('pipette released');
       full = false;
     }
   }
@@ -132,12 +132,14 @@ class Pipett extends SpriteComponent
 
     if (minDistance < snapSeperation) {
       position = fillSnappablePosition[minIndex];
-      if (minIndex == 0) {
+      if (minIndex == 0 && gameRef.phenoph.volume != 0) {
         reagent = "phenolphthalein";
-      } else {
+      } else if (minIndex == 1 && gameRef.methyl.volume != 0) {
         reagent = "methylOrange";
+      } else {
+        return false;
       }
-      print(reagent);
+      // print(reagent);
       return true;
     } else {
       //go back to original location

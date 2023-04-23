@@ -40,6 +40,32 @@ class TapButton extends SpriteComponent
     gameRef.pipett.full = false;
     size =
         assignedSize ?? Vector2(gameRef.size[0] * 0.3, gameRef.size[1] * 0.1);
+
+    if (hoveredAssetname == 'acidbuttonunpressed.png') {
+      if (gameRef.liquid.amountOfAcid > 0) {
+        // congrats you selected acid sucessfully
+        // prompt
+        print(gameRef.liquid.amountOfBase);
+        print('you win');
+        gameRef.overlays.add('GameEndWin');
+        print(gameRef.liquid.amountOfAcid);
+      } else {
+        //sorry you were wrong
+      }
+    }
+
+    if (hoveredAssetname == 'basebuttonunpressed.png') {
+      if (gameRef.liquid.amountOfBase > 0) {
+        // congrats you selected Base sucessfully
+        // prompt
+        print(gameRef.liquid.amountOfAcid);
+        print('you win');
+        gameRef.overlays.add('GameEndWin');
+        print(gameRef.liquid.amountOfBase);
+      } else {
+        //sorry you were wrong
+      }
+    }
   }
 
   @override

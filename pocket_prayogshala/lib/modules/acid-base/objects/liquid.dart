@@ -14,7 +14,7 @@ class Liquid extends SpriteComponent with HasGameRef<AcidBaseCheckGame> {
   late double amountOfAcid = 0;
   late double amountOfBase = 0;
   late double width = 0.15 * gameRef.size[0];
-  double volume = 0;
+  double volume = 400;
   double totalVolume = 500;
   late String currentAgent = 'water';
   late Color currentColor;
@@ -40,11 +40,6 @@ class Liquid extends SpriteComponent with HasGameRef<AcidBaseCheckGame> {
     super.update(dt);
     updateColor();
     spriteUpdate();
-
-    // test
-    if (volume < totalVolume) {
-      volume += 50 * dt;
-    }
   }
 
   // setting up sprite placements
@@ -61,7 +56,7 @@ class Liquid extends SpriteComponent with HasGameRef<AcidBaseCheckGame> {
     bool acid;
     double scaledAmount = (amountOfAcid - amountOfBase) / 10;
     (amountOfAcid - amountOfBase) < 0 ? acid = false : acid = true;
-    acid ? colorDelta = 0 : colorDelta = 3;
+    acid ? colorDelta = 3 : colorDelta = 0;
     if (currentAgent == 'water') {
       currentColor = Color.fromRGBO(
           agent[currentAgent]?[0 + colorDelta],
@@ -100,6 +95,7 @@ class Liquid extends SpriteComponent with HasGameRef<AcidBaseCheckGame> {
         ? scaledSigmoid = minOpacity
         : scaledSigmoid;
     (amountOfAcid - amountOfBase) < 0 ? acid = false : acid = true;
+    print(amountOfAcid - amountOfBase);
     if (currentAgent == 'water') {
       liquidOpacity = minOpacity;
     } else if (currentAgent == 'phenolphthalein') {
