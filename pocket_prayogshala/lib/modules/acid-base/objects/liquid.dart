@@ -95,7 +95,6 @@ class Liquid extends SpriteComponent with HasGameRef<AcidBaseCheckGame> {
         ? scaledSigmoid = minOpacity
         : scaledSigmoid;
     (amountOfAcid - amountOfBase) < 0 ? acid = false : acid = true;
-    print(amountOfAcid - amountOfBase);
     if (currentAgent == 'water') {
       liquidOpacity = minOpacity;
     } else if (currentAgent == 'phenolphthalein') {

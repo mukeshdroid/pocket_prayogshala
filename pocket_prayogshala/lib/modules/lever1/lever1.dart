@@ -115,7 +115,7 @@ class Lever1Game extends FlameGame with DragCallbacks {
       int tempX = 0;
       MyDragSpriteComponent weight = MyDragSpriteComponent()
         ..anchor = Anchor.center
-        ..sprite = await loadSprite('weight.png')
+        ..sprite = await loadSprite('weight$i.png')
         ..size = Vector2(30, 30) + Vector2(4, 4) * i.toDouble()
         ..y = screenHeight - 30 - 2 * i
         ..x = screenWidth - 50 - pow(i, 1.3) * 27
@@ -180,7 +180,6 @@ class Lever1Game extends FlameGame with DragCallbacks {
   void update(double dt) {
     super.update(dt);
     tilt = isBalanced();
-    //print(size);
     if (plankRod.angle >= -100 && plankRod.angle <= 0.0 && tilt == 0) {
       if (plankRod.angle.abs() <= minSnappingAngle) {
         plankRod.angle = 0;
@@ -230,9 +229,6 @@ class Lever1Game extends FlameGame with DragCallbacks {
       snappablePositions.add(
           updateSnapPos(snappablePositionsMain[i], center, plankRod.angle));
     }
-
-    print(snappablePositions);
-    //print(updateSnapPos(Vector2(1, 0), Vector2(0, 0), pi / 2));
   }
 }
 

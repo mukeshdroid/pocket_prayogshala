@@ -20,22 +20,29 @@ class acidBase extends StatelessWidget {
       game: AcidBaseCheckGame(),
       overlayBuilderMap: {
         'GameEndWin': (context, game) {
-          return Container(
-            color: Color.fromARGB(255, 255, 245, 245),
-            child: const Text(
-              ' you won',
-              textScaleFactor: 5,
-              textAlign: TextAlign.right,
+          return AlertDialog(
+            title: const Text('AlertDialog Title'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const <Widget>[
+                  Text('You have won.'),
+                  Text('Tap anywhere to continue'),
+                ],
+              ),
             ),
           );
         },
         'GameEndLoss': (context, game) {
-          return Container(
-            color: const Color(0xFF000000),
-            child: const Text(
-              'you lost',
-              textScaleFactor: 5,
-              textAlign: TextAlign.right,
+          return AlertDialog(
+            title: const Text('गलत उत्तर |'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const <Widget>[
+                  Text(
+                      'कुन पदार्थ ले कस्तो रंग दिन्छ हेर्न यस module को प्रथम प्रीस्ठ मा जानु होला |'),
+                  Text('Tap anywhere to continue'),
+                ],
+              ),
             ),
           );
         },
@@ -44,7 +51,7 @@ class acidBase extends StatelessWidget {
   }
 }
 
-class AcidBaseCheckGame extends FlameGame with DragCallbacks {
+class AcidBaseCheckGame extends FlameGame with DragCallbacks, TapCallbacks {
   SpriteComponent backgroundImage = SpriteComponent();
   SpriteComponent beaker = SpriteComponent();
   SpriteComponent beakerPhenolphthalein = SpriteComponent();
@@ -67,9 +74,6 @@ class AcidBaseCheckGame extends FlameGame with DragCallbacks {
   void resetGame() {
     int intValue1 = Random().nextInt(2);
     double intValue2 = Random().nextDouble() * 20 - 10;
-
-    print(intValue1);
-    print(intValue2);
     liquid.currentAgent = 'water';
     if (intValue1 == 0) {
       phenoph.volume = 500;
@@ -102,8 +106,8 @@ class AcidBaseCheckGame extends FlameGame with DragCallbacks {
 
     //buttons
     acidButton
-      ..hoveredAssetname = 'acidbuttonunpressed.png'
-      ..nothoveredAssetname = 'acidbuttonpressed.png'
+      ..hoveredAssetname = 'acidButtonunpressed.png'
+      ..nothoveredAssetname = 'acidButtonpressed.png'
       ..x = (beakerMethX + beakerMainX) / 2
       ..y = beakerY + 0.08 * screenHeight
       ..priority = 5
@@ -248,6 +252,17 @@ class AcidBaseCheckGame extends FlameGame with DragCallbacks {
     add(beakerMethylOrange);
     add(beaker);
     resetGame();
+  }
+
+  @override
+  void onTapDown(TapDownEvent event) {
+    // TODO: implement onTapUp
+    super.onTapDown(event);
+    if (overlays.isActive('GameEndWin')) {
+      overlays.remove('GameEndWin');
+    } else if (overlays.isActive('GameEndLoss')) {
+      overlays.remove('GameEndLoss');
+    }
   }
 
   @override
