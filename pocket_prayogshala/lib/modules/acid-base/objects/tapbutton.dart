@@ -40,6 +40,43 @@ class TapButton extends SpriteComponent
     gameRef.pipett.full = false;
     size =
         assignedSize ?? Vector2(gameRef.size[0] * 0.3, gameRef.size[1] * 0.1);
+
+    bool filledState;
+
+    (gameRef.overlays.isActive('GameEndWin') ||
+            gameRef.overlays.isActive('GameEndLoss'))
+        ? filledState = true
+        : filledState = false;
+
+    bool buttonPressable;
+    (gameRef.liquid.currentAgent != 'water')
+        ? buttonPressable = true
+        : buttonPressable = false;
+
+    if (hoveredAssetname == 'acidButtonunpressed.png' &&
+        !filledState &&
+        buttonPressable) {
+      if (gameRef.liquid.amountOfAcid > 0) {
+        // congrats you selected acid sucessfully
+        // prompt
+        gameRef.overlays.add('GameEndWin');
+      } else {
+        //sorry you were wrong
+        gameRef.overlays.add('GameEndLoss');
+      }
+    }
+    if (hoveredAssetname == 'basebuttonunpressed.png' &&
+        !filledState &&
+        buttonPressable) {
+      if (gameRef.liquid.amountOfBase > 0) {
+        // congrats you selected Base sucessfully
+        // prompt
+        gameRef.overlays.add('GameEndWin');
+      } else {
+        //sorry you were wrong
+        gameRef.overlays.add('GameEndLoss');
+      }
+    }
   }
 
   @override

@@ -16,11 +16,42 @@ import 'objects/textBoxAcid.dart';
 class acidBase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GameWidget(game: AcidBaseCheckGame());
+    return GameWidget(
+      game: AcidBaseCheckGame(),
+      overlayBuilderMap: {
+        'GameEndWin': (context, game) {
+          return AlertDialog(
+            title: const Text('AlertDialog Title'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const <Widget>[
+                  Text('You have won.'),
+                  Text('Tap anywhere to continue'),
+                ],
+              ),
+            ),
+          );
+        },
+        'GameEndLoss': (context, game) {
+          return AlertDialog(
+            title: const Text('गलत उत्तर |'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const <Widget>[
+                  Text(
+                      'कुन पदार्थ ले कस्तो रंग दिन्छ हेर्न यस module को प्रथम प्रीस्ठ मा जानु होला |'),
+                  Text('Tap anywhere to continue'),
+                ],
+              ),
+            ),
+          );
+        },
+      },
+    );
   }
 }
 
-class AcidBaseCheckGame extends FlameGame with DragCallbacks {
+class AcidBaseCheckGame extends FlameGame with DragCallbacks, TapCallbacks {
   SpriteComponent backgroundImage = SpriteComponent();
   SpriteComponent beaker = SpriteComponent();
   SpriteComponent beakerPhenolphthalein = SpriteComponent();
@@ -32,13 +63,31 @@ class AcidBaseCheckGame extends FlameGame with DragCallbacks {
   Reagent phenoph = Reagent();
   Reagent methyl = Reagent();
   Pipett pipett = Pipett();
-  TapButton nextButton = TapButton();
-  TapButton retryButton = TapButton();
+  TapButton acidButton = TapButton();
+  TapButton baseButton = TapButton();
 
   late MyTextBox questionDisplay;
   late MyTextBox textMainBeaker;
   late MyTextBox textPhenBeaker;
   late MyTextBox textMethBeaker;
+
+  void resetGame() {
+    int intValue1 = Random().nextInt(2);
+    double intValue2 = Random().nextDouble() * 20 - 10;
+    liquid.currentAgent = 'water';
+    if (intValue1 == 0) {
+      phenoph.volume = 500;
+      methyl.volume = 0;
+    } else {
+      phenoph.volume = 0;
+      methyl.volume = 500;
+    }
+    if (intValue2 < 0) {
+      liquid.amountOfAcid = -1 * intValue2;
+    } else {
+      liquid.amountOfBase = intValue2;
+    }
+  }
 
   @override
   Future<void> onLoad() async {
@@ -56,18 +105,18 @@ class AcidBaseCheckGame extends FlameGame with DragCallbacks {
     add(backgroundImage);
 
     //buttons
-    nextButton
-      ..hoveredAssetname = 'acidbuttonunpressed.png'
-      ..nothoveredAssetname = 'acidbuttonpressed.png'
+    acidButton
+      ..hoveredAssetname = 'acidButtonunpressed.png'
+      ..nothoveredAssetname = 'acidButtonpressed.png'
       ..x = (beakerMethX + beakerMainX) / 2
       ..y = beakerY + 0.08 * screenHeight
       ..priority = 5
       ..assignedSize =
           Vector2(screenWidth * 0.15, screenWidth * 0.15 * (375 / 624))
       ..anchor = Anchor.topCenter;
-    add(nextButton);
+    add(acidButton);
 
-    retryButton
+    baseButton
       ..hoveredAssetname = 'basebuttonunpressed.png'
       ..nothoveredAssetname = 'basebuttonpressed.png'
       ..x = (beakerPhenX + beakerMainX) / 2
@@ -76,7 +125,7 @@ class AcidBaseCheckGame extends FlameGame with DragCallbacks {
       ..assignedSize =
           Vector2(screenWidth * 0.15, screenWidth * 0.15 * (375 / 624))
       ..anchor = Anchor.topCenter;
-    add(retryButton);
+    add(baseButton);
 
     // ratio 1:5.75
     pipett
@@ -117,7 +166,7 @@ class AcidBaseCheckGame extends FlameGame with DragCallbacks {
       ..y = beakerY
       ..x = screenWidth / 2
       ..width = 0.205 * screenWidth * .845
-      ..amountOfAcid = 1000
+      ..amountOfAcid = 0
       ..priority = 3;
     add(liquid);
 
@@ -202,12 +251,30 @@ class AcidBaseCheckGame extends FlameGame with DragCallbacks {
     add(beakerPhenolphthalein);
     add(beakerMethylOrange);
     add(beaker);
+    resetGame();
+  }
+
+  @override
+  void onTapDown(TapDownEvent event) {
+    // TODO: implement onTapUp
+    super.onTapDown(event);
+    if (overlays.isActive('GameEndWin')) {
+      overlays.remove('GameEndWin');
+    } else if (overlays.isActive('GameEndLoss')) {
+      overlays.remove('GameEndLoss');
+    }
   }
 
   @override
   void update(double dt) {
+    if (liquid.currentAgent == "phenolphthalein") {
+      textMainBeaker.text = 'तत्काल राखिएको अभिक्रमक : फेनोल्पथाइलीन';
+    } else if (liquid.currentAgent == "methylOrange") {
+      textMainBeaker.text = 'तत्काल राखिएको अभिक्रमक : मिथायल ऑरेंज';
+    } else {
+      textMainBeaker.text = 'तत्काल राखिएको अभिक्रमक : खाली';
+    }
     super.update(dt);
-    print(size);
     liquid.add(ColorEffect(liquid.currentColor, const Offset(0.0, 1),
         EffectController(duration: 0.0)));
     liquid.add(

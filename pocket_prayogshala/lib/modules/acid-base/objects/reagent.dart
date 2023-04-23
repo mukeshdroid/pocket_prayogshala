@@ -40,11 +40,6 @@ class Reagent extends SpriteComponent with HasGameRef {
     super.update(dt);
     updateColor();
     spriteUpdate();
-
-    // test
-    if (volume < totalVolume) {
-      volume += 50 * dt;
-    }
   }
 
   // setting up sprite placements
