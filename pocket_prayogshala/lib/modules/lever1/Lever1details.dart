@@ -19,23 +19,20 @@ class Lever1Page extends StatelessWidget {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => Lever1()));
         },
-        child: Expanded(
-          flex: 1,
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.5,
-            height: MediaQuery.of(context).size.height * 0.5,
-            decoration:
-                BoxDecoration(color: Color.fromARGB(255, 234, 228, 228)),
-            child: Image.asset(
-              'assets/images/lever2_bg.jpg',
-            ),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.5,
+          height: MediaQuery.of(context).size.height * 0.5,
+          decoration: BoxDecoration(color: Color.fromARGB(255, 234, 228, 228)),
+          child: Image.asset(
+            'assets/images/lever2_bg.jpg',
           ),
         ));
+
     var detailsArea = Expanded(
       flex: 1,
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.5,
-        height: MediaQuery.of(context).size.height * 0.5,
+        //width: MediaQuery.of(context).size.width * 0.5,
+        // height: MediaQuery.of(context).size.height * 0.5,
         decoration: BoxDecoration(color: Colors.yellow),
       ),
     );
@@ -43,7 +40,6 @@ class Lever1Page extends StatelessWidget {
     var instructionsText = Expanded(
         flex: 1,
         child: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
             decoration:
                 BoxDecoration(color: Color.fromARGB(255, 211, 220, 129)),
             child: Text('lever1')));
