@@ -34,11 +34,9 @@ class Pipett extends SpriteComponent
     spriteempty = await Sprite.load('pipetteempty.png');
     final screenWidth = gameRef.size[0];
     final screenHeight = gameRef.size[1];
-    // initialPosition = Vector2(size.x, size.y);
     releaseSnappablePosition.add(Vector2(screenWidth * .5, screenHeight * .65));
     fillSnappablePosition.add(Vector2(screenWidth * .20, screenHeight * .7));
     fillSnappablePosition.add(Vector2(screenWidth * .80, screenHeight * .7));
-    // print(fillSnappablePosition);
   }
 
   @override
@@ -91,7 +89,6 @@ class Pipett extends SpriteComponent
 
   fill() {
     // fills the pipette with the given reagent
-    print('pipette filled at ');
 
     full = true;
   }
@@ -102,7 +99,6 @@ class Pipett extends SpriteComponent
     // the pipett is not empty.
     if (full) {
       gameRef.liquid.currentAgent = reagent;
-      print('pipette released');
       full = false;
     }
   }
@@ -132,12 +128,14 @@ class Pipett extends SpriteComponent
 
     if (minDistance < snapSeperation) {
       position = fillSnappablePosition[minIndex];
-      if (minIndex == 0) {
+      if (minIndex == 0 && gameRef.phenoph.volume != 0) {
         reagent = "phenolphthalein";
-      } else {
+      } else if (minIndex == 1 && gameRef.methyl.volume != 0) {
         reagent = "methylOrange";
+      } else {
+        return false;
       }
-      print(reagent);
+
       return true;
     } else {
       //go back to original location
