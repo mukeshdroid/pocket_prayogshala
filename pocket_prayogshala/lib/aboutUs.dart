@@ -38,9 +38,23 @@ Widget urlText(String link, String description, String substitute, bool showUrl,
 class AboutUsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    double unitWidthValue = MediaQuery.of(context).size.width * 0.01;
+
+    double radMul = 15;
+
     var indivisualInfoAayam = Column(
       children: [
-        Image.asset('assets/images/walnut1.png'),
+        ClipOval(
+          child: SizedBox.fromSize(
+            size: Size.fromRadius((unitHeightValue < unitWidthValue)
+                ? unitHeightValue * radMul
+                : unitWidthValue * radMul), // Image radius
+            child: Image.asset(
+              'assets/images/aayam.jpg',
+            ),
+          ),
+        ),
         Text('Aayam Basyal'),
         urlText(
           'https://github.com/ayambasyal',
@@ -60,7 +74,16 @@ class AboutUsPage extends StatelessWidget {
     );
     var indivisualInfoPriyanka = Column(
       children: [
-        Image.asset('assets/images/walnut1.png'),
+        ClipOval(
+          child: SizedBox.fromSize(
+            size: Size.fromRadius((unitHeightValue < unitWidthValue)
+                ? unitHeightValue * radMul
+                : unitWidthValue * radMul), // Image radius
+            child: Image.asset(
+              'assets/images/priyanka.jpg',
+            ),
+          ),
+        ),
         Text('Priyanka Panta'),
         urlText(
           'https://github.com/priyanka00200',
@@ -78,26 +101,39 @@ class AboutUsPage extends StatelessWidget {
         ),
       ],
     );
-    var indivisualInfoMukesh = Column(
-      children: [
-        Image.asset('assets/images/walnut1.png'),
-        Text('Mukesh Tiwari'),
-        urlText(
-          'https://github.com/mukeshdroid',
-          'Github',
-          '@mukeshdroid',
-          false,
-          Icon(MyIcons.github_circled),
-        ),
-        urlText(
-          'https://np.linkedin.com/in/mukesh-tiwari1?trk=public_profile_browsemap',
-          'LinkedIn',
-          'Mukesh Tiwari',
-          false,
-          const Icon(MyIcons.linkedin_circled),
-        ),
-      ],
+    var indivisualInfoMukesh = Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          ClipOval(
+            child: SizedBox.fromSize(
+              size: Size.fromRadius((unitHeightValue < unitWidthValue)
+                  ? unitHeightValue * radMul
+                  : unitWidthValue * radMul), // Image radius
+              child: Image.asset(
+                'assets/images/mukesh.jpeg',
+              ),
+            ),
+          ),
+          Text('Mukesh Tiwari'),
+          urlText(
+            'https://github.com/mukeshdroid',
+            'Github',
+            '@mukeshdroid',
+            false,
+            Icon(MyIcons.github_circled),
+          ),
+          urlText(
+            'https://np.linkedin.com/in/mukesh-tiwari1?trk=public_profile_browsemap',
+            'LinkedIn',
+            'Mukesh Tiwari',
+            false,
+            const Icon(MyIcons.linkedin_circled),
+          ),
+        ],
+      ),
     );
+
     var personalRow = Row(
       children: [
         Expanded(flex: 1, child: indivisualInfoAayam),
@@ -105,15 +141,37 @@ class AboutUsPage extends StatelessWidget {
         Expanded(flex: 1, child: indivisualInfoMukesh),
       ],
     );
-    var generalInfo = RichText(
+
+    var info_us = RichText(
       text: TextSpan(
-        text: 'Supervisor : Dr. Saraswati Acharya ',
-        style: DefaultTextStyle.of(context).style,
+        text:
+            'We are a group of students studying computational mathematics at Kathmandu University, located in Nepal.'
+            ' As students of this field, we have a deep understanding of mathematical principles, computer science, and algorithms, and we have applied this knowledge to create an innovative app. '
+            'This app is specifically designed for the class 8 curriculum intended'
+            ' to make learning more engaging and interactive for students in this grade, and it can help them better understand and retain the material.',
+        style: TextStyle(color: Colors.black, fontSize: 20),
         children: const <TextSpan>[
-          TextSpan(text: '', style: TextStyle(fontWeight: FontWeight.bold)),
-          TextSpan(text: ' !'),
+          TextSpan(
+              text: '',
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+          TextSpan(text: ' '),
         ],
       ),
+      textAlign: TextAlign.center,
+    );
+
+    var generalInfo = RichText(
+      text: TextSpan(
+        text: '  ',
+        style: TextStyle(color: Colors.black, fontSize: 20),
+        children: const <TextSpan>[
+          TextSpan(
+              text: 'Supervisor : Dr. Saraswati Acharya',
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+          TextSpan(text: ' '),
+        ],
+      ),
+      textAlign: TextAlign.center,
     );
     return Scaffold(
       appBar: AppBar(
@@ -132,10 +190,13 @@ class AboutUsPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Column(children: [
-        personalRow,
-        generalInfo,
-      ]),
+      body: Column(
+        children: [
+          personalRow,
+          info_us,
+          generalInfo,
+        ],
+      ),
     );
   }
 }

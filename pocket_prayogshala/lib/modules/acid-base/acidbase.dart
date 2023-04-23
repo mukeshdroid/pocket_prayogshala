@@ -207,7 +207,6 @@ class AcidBaseCheckGame extends FlameGame with DragCallbacks {
   @override
   void update(double dt) {
     super.update(dt);
-    print(size);
     liquid.add(ColorEffect(liquid.currentColor, const Offset(0.0, 1),
         EffectController(duration: 0.0)));
     liquid.add(
