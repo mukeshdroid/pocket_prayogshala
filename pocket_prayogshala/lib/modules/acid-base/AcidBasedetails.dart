@@ -24,7 +24,7 @@ class AcidBasePage extends StatelessWidget {
           height: MediaQuery.of(context).size.height * 0.5,
           decoration: BoxDecoration(color: Color.fromARGB(255, 234, 228, 228)),
           child: Image.asset(
-            'assets/images/lever2_bg.jpg',
+            'assets/images/acidbasethumbnail.png',
           ),
         ));
     var detailsArea = Expanded(
