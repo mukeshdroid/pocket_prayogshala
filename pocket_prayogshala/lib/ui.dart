@@ -92,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
 // module[2] = 1 if implemented 0 otherwise
     var phyModules = [
       ["चाकल-चुकुल(see-saw)", 'seesaw.jpg', true, Lever1Page()],
-      ["सरौतो(Nutcracker)", 'nutcracker.jpeg', true, Lever2Page()],
+      ["सरौतो(Nutcracker)", 'nutcracker.jpg', true, Lever2Page()],
       [
         "गति र प्रवेग(Velocity and Acceleration)",
         'Velocity.jpg',
@@ -140,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //List<String> mathModules = [];
 
     var bioModules = [
-      ["बीजको फैलावट(Dispersal of seed)", 'seed.jpeg', false, SecondRoute()],
+      ["बीजको फैलावट(Dispersal of seed)", 'seed.jpg', false, SecondRoute()],
       ["बीजको अंकुरण(Germination of seed)", 'seed1.jpeg', false, SecondRoute()],
       [
         "फूल फुल्ने बिरुवाको जीवन चक्र(Life Cycle of Flower)",

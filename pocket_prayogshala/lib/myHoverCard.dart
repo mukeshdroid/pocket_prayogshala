@@ -33,11 +33,11 @@ class _MyHoverCardState extends State<MyHoverCard> {
   Widget build(BuildContext context) {
     var imageStack = Stack(
       children: <Widget>[
-        //Expanded(
-        //   child: Image.asset(
-        //'assets/images/${widget.imagesrc}',
-        //fit: BoxFit.cover,
-        // ),
+        Expanded(
+            child: Image.asset(
+          'assets/images/${widget.imagesrc}',
+          fit: BoxFit.cover,
+        )),
         Positioned(
             child: Text(
           (isHover && !widget.isImplemented) ? widget.textBanner : '',
