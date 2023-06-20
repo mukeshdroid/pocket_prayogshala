@@ -21,11 +21,11 @@ class acidBase extends StatelessWidget {
       overlayBuilderMap: {
         'GameEndWin': (context, game) {
           return AlertDialog(
-            title: const Text('AlertDialog Title'),
+            title: const Text('सही उत्तर'),
             content: SingleChildScrollView(
               child: ListBody(
                 children: const <Widget>[
-                  Text('You have won.'),
+                  Text('You have given the right answer.'),
                   Text('Tap anywhere to continue'),
                 ],
               ),
@@ -87,6 +87,8 @@ class AcidBaseCheckGame extends FlameGame with DragCallbacks, TapCallbacks {
     } else {
       liquid.amountOfBase = intValue2;
     }
+    pipett.x = 0.05 * size[0];
+    pipett.y = 0.5 * size[1];
   }
 
   @override
@@ -260,6 +262,7 @@ class AcidBaseCheckGame extends FlameGame with DragCallbacks, TapCallbacks {
     super.onTapDown(event);
     if (overlays.isActive('GameEndWin')) {
       overlays.remove('GameEndWin');
+      resetGame();
     } else if (overlays.isActive('GameEndLoss')) {
       overlays.remove('GameEndLoss');
     }
