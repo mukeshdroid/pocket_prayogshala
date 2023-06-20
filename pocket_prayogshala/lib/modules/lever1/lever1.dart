@@ -58,6 +58,7 @@ class Lever1Game extends FlameGame with DragCallbacks {
   Future<void> onLoad() async {
     final screenWidth = size[0];
     final screenHeight = size[1];
+    print(size);
 
     await super.onLoad();
 
@@ -66,6 +67,14 @@ class Lever1Game extends FlameGame with DragCallbacks {
       ..size = size;
 
     add(backgroundImage);
+
+    fulcrum
+      ..anchor = Anchor.center
+      ..sprite = await loadSprite('plankBase.png')
+      ..size = Vector2(0.11 * screenWidth, 0.22 * screenHeight)
+      ..y = screenHeight / 2 + 0.105 * screenHeight
+      ..x = screenWidth / 2;
+    add(fulcrum);
 
     plankRod
       ..anchor = Anchor.center
@@ -76,14 +85,6 @@ class Lever1Game extends FlameGame with DragCallbacks {
     add(plankRod);
 
     gap = plankRod.size.x / 10;
-
-    fulcrum
-      ..anchor = Anchor.center
-      ..sprite = await loadSprite('plankBase.png')
-      ..size = Vector2(150, 150)
-      ..y = screenHeight / 2 + 0.11 * screenHeight
-      ..x = screenWidth / 2 - 0.005 * screenWidth;
-    add(fulcrum);
 
     grass
       ..anchor = Anchor.topCenter
@@ -302,6 +303,7 @@ class MyDragSpriteComponent extends SpriteComponent
     // onWeight - if the load is on the lever/plank/balance
 
     if (onWeight == true) {
+      print('on weight');
       if (snappable) {
         // remove the current snap
         resetSnap();
