@@ -32,15 +32,15 @@ The official documentation provides guidance on setting up Flutter for the first
 ## WHO ARE WE
 Meet our team of three talented students studying Computational Mathematics at Kathmandu University! With diverse strengths in coding, designing, and art, we have come together to work on this exciting project.
 
-Mukesh Tiwari
+Mukesh Tiwari <br>
+linkedin: www.linkedin.com/in/tiwarimukesh12
+github: www.github.com/mukeshdroid
+
+Priyanka Panta <br>
 linkedin:
 github:
 
-Priyanka Panta
-linkedin:
-github:
-
-Ayam Basyal
+Ayam Basyal <br>
 linkedin:
 github:
 
