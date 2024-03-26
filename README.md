@@ -41,6 +41,6 @@ linkedin:
 github:
 
 Ayam Basyal <br>
-linkedin:
-github:
+linkedin: https://www.linkedin.com/in/ayam-basyal/
+github: https://github.com/ayambasyal
 
